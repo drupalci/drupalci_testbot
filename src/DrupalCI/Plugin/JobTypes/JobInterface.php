@@ -75,6 +75,14 @@ interface JobInterface {
    */
   public function errorOutput($type = 'Error', $message = 'DrupalCI has encountered an error.');
 
+  /**
+   * Execute a shell command.
+   *
+   * @param string $cmd
+   *   The commmand line.
+   *
+   * @see \Symfony\Component\Process\Process::__construct().
+   */
   public function shellCommand($cmd);
 
   /**
@@ -82,6 +90,13 @@ interface JobInterface {
    */
   public function getDocker();
 
+  /**
+   * Get a list of containers to run Docker exec in.
+   *
+   * @return array
+   *  An array of container IDs. The first key is the type, can be 'php' or
+   *  'web'. Web has everything php
+   */
   public function getExecContainers();
 
   public function setExecContainers(array $containers);

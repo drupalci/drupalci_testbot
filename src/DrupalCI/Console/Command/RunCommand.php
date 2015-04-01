@@ -7,6 +7,7 @@
 
 namespace DrupalCI\Console\Command;
 
+use DrupalCI\Console\Output;
 use DrupalCI\Plugin\PluginManager;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -52,7 +53,7 @@ class RunCommand extends DrupalCICommandBase {
     /** @var $job \DrupalCI\Plugin\JobTypes\JobInterface */
     $job = $this->jobPluginManager()->getPlugin($job_type, $job_type);
     // Link our $output variable to the job, so that jobs can display their work.
-    $job->setOutput($output);
+    Output::setOutput($output);
     // TODO: Create hook to allow for jobtype-specific pre-configuration.
     // We'll need this if we want to (as an example) convert travisci
     // definitions to drupalci definitions.

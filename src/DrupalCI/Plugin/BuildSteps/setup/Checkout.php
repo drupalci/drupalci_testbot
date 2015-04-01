@@ -60,7 +60,7 @@ class Checkout extends SetupBase {
       $job->errorOutput("Error", "The checkout directory <info>$directory</info> is invalid.");
       return;
     }
-    $job->getOutput()->write("<comment>Copying files from <options=bold>$srcdir</options=bold> to the local checkout directory <options=bold>$directory</options=bold> ... </comment>");
+    Output::writeln("<comment>Copying files from <options=bold>$srcdir</options=bold> to the local checkout directory <options=bold>$directory</options=bold> ... </comment>");
     exec("cp -r $srcdir/* $directory", $cmdoutput, $result);
     if (is_null($result)) {
       $job->errorOutput("Failed", "Error encountered while attempting to copy code to the local checkout directory.");
