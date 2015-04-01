@@ -70,6 +70,9 @@ class BuildCommand extends DrupalCICommandBase {
       if (isset($output['stream'])) {
         Output::writeLn('<info>' . $output['stream'] . '</info>');
       }
+      elseif (isset($output['error'])) {
+        Output::error('Error', $output['error']);
+      }
     });
 
 
