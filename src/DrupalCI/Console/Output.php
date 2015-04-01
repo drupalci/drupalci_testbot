@@ -34,12 +34,4 @@ class Output {
     }
   }
 
-  public static function streamOutput($result, $type) {
-    if ($type === 1) {
-      static::writeLn("<info>$result</info>");
-    }
-    else {
-      static::error('Error', $result);
-    }
-  }
 }

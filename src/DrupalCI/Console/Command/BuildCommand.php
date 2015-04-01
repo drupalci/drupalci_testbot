@@ -66,8 +66,12 @@ class BuildCommand extends DrupalCICommandBase {
     $docker = $this->getDocker();
     $context = new Context($container_path);
     Output::writeln("-------------------- Start build script --------------------");
-    $response = $docker->build($context, $name, ['DrupalCI\Console\Output', 'streamOutput']);
-
+    $response = $docker->build($context, $name, function ($output) use (&$content) {
+      if (isset($output['stream'])) {
+        $content .= $output['stream'];
+      }
+    });
+    Output::writeLn("<info>$content</info>");
 
     //$response = $docker->build($context, $name, function ($result) use (&$content) {
     //  if (isset($result['stream'])) {
