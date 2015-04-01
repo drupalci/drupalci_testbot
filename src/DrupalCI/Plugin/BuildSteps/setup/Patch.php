@@ -8,6 +8,7 @@
 
 namespace DrupalCI\Plugin\BuildSteps\setup;
 
+use DrupalCI\Console\Output;
 use DrupalCI\Plugin\JobTypes\JobInterface;
 
 /**
@@ -25,7 +26,7 @@ class Patch extends SetupBase {
     // iii) array(array(...), array(...))
     // Normalize data to the third format, if necessary
     $data = (count($data) == count($data, COUNT_RECURSIVE)) ? [$data] : $data;
-    $job->getOutput()->writeln("<info>Entering setup_patch().</info>");
+    Output::writeLn("<info>Entering setup_patch().</info>");
     foreach ($data as $key => $details) {
       if (empty($details['patch_file'])) {
         $job->errorOutput("Error", "No valid patch file provided for the patch command.");
@@ -46,11 +47,11 @@ class Patch extends SetupBase {
       if ($result !==0) {
         // The command threw an error.
         $job->errorOutput("Patch failed", "The patch attempt returned an error.");
-        $job->getOutput()->writeln($cmdoutput);
+        Output::writeLn($cmdoutput);
         // TODO: Pass on the actual return value for the patch attempt
         return;
       }
-      $job->getOutput()->writeln("<comment>Patch <options=bold>$patchfile</options=bold> applied to directory <options=bold>$directory</options=bold></comment>");
+      Output::writeLn("<comment>Patch <options=bold>$patchfile</options=bold> applied to directory <options=bold>$directory</options=bold></comment>");
     }
   }
 }

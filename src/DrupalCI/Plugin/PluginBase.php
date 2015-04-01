@@ -5,6 +5,7 @@
  */
 
 namespace DrupalCI\Plugin;
+
 use DrupalCI\Plugin\JobTypes\JobInterface;
 
 /**

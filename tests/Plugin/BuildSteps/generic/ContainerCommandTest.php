@@ -9,6 +9,7 @@
 namespace DrupalCI\Tests\Plugin\BuildSteps\generic;
 
 use Docker\Container;
+use DrupalCI\Console\Output;
 use DrupalCI\Plugin\BuildSteps\generic\ContainerCommand;
 
 /**
@@ -49,6 +50,7 @@ class ContainerCommandTest extends \PHPUnit_Framework_TestCase {
       ->will($this->returnValue($container_manager));
 
     $output = $this->getMock('Symfony\Component\Console\Output\OutputInterface');
+    Output::setOutput($output);
 
     $job = $this->getMock('DrupalCI\Plugin\JobTypes\JobInterface');
     $job->expects($this->once())
@@ -57,9 +59,6 @@ class ContainerCommandTest extends \PHPUnit_Framework_TestCase {
     $job->expects($this->once())
       ->method('getExecContainers')
       ->will($this->returnValue(['php' => [['id' => 'dockerci/php-5.4']]]));
-    $job->expects($this->any())
-      ->method('getOutput')
-      ->will($this->returnValue($output));
 
     $command = new ContainerCommand([], 'command', []);
     $command->run($job, [implode(' ', $cmd)]);

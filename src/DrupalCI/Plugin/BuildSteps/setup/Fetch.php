@@ -7,6 +7,7 @@
  */
 
 namespace DrupalCI\Plugin\BuildSteps\setup;
+use DrupalCI\Console\Output;
 use DrupalCI\Plugin\JobTypes\JobInterface;
 
 /**
@@ -24,7 +25,7 @@ class Fetch extends SetupBase {
     // iii) array(array(...), array(...))
     // Normalize data to the third format, if necessary
     $data = (count($data) == count($data, COUNT_RECURSIVE)) ? [$data] : $data;
-    $job->getOutput()->writeln("<info>Entering setup_fetch().</info>");
+    Output::writeLn("<info>Entering setup_fetch().</info>");
     foreach ($data as $key => $details) {
       // URL and target directory
       // TODO: Ensure $details contains all required parameters
@@ -51,7 +52,7 @@ class Fetch extends SetupBase {
         $job->errorOutput("Error", "An error was encountered while attempting to write <info>$url</info> to <info>$directory</info>");
         return;
       }
-      $job->getOutput()->writeln("<comment>Fetch of <options=bold>$url</options=bold> to <options=bold>$destfile</options=bold> complete.</comment>");
+      Output::writeLn("<comment>Fetch of <options=bold>$url</options=bold> to <options=bold>$destfile</options=bold> complete.</comment>");
     }
   }
 }

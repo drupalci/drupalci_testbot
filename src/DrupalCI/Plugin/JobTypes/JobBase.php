@@ -8,6 +8,7 @@ namespace DrupalCI\Plugin\JobTypes;
 
 use Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use DrupalCI\Console\Output;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 use DrupalCI\Console\Jobs\ContainerBase;
@@ -144,12 +145,7 @@ class JobBase extends ContainerBase implements JobInterface {
   }
 
   public function errorOutput($type = 'Error', $message = 'DrupalCI has encountered an error.') {
-    if (!empty($type)) {
-      $this->output->writeln("<error>$type</error>");
-    }
-    if (!empty($message)) {
-      $this->output->writeln("<comment>$message</comment>");
-    }
+    Output::error($type, $message);
     $this->errorStatus = -1;
   }
 
@@ -158,7 +154,7 @@ class JobBase extends ContainerBase implements JobInterface {
     $process->setTimeout(3600*6);
     $process->setIdleTimeout(3600);
     $process->run(function ($type, $buffer) {
-        $this->output->writeln($buffer);
+        Output::writeln($buffer);
     });
    }
 
@@ -256,7 +252,7 @@ class JobBase extends ContainerBase implements JobInterface {
     $container['name'] = $instance->getName();
     $container['created'] = TRUE;
     $short_id = substr($container['id'], 0, 8);
-    $this->output->writeln("<comment>Container <options=bold>${container['name']}</options=bold> created from image <options=bold>${container['image']}</options=bold> with ID <options=bold>$short_id</options=bold></comment>");
+    Output::writeln("<comment>Container <options=bold>${container['name']}</options=bold> created from image <options=bold>${container['image']}</options=bold> with ID <options=bold>$short_id</options=bold></comment>");
   }
 
   protected function createContainerLinks() {
@@ -316,7 +312,7 @@ class JobBase extends ContainerBase implements JobInterface {
     foreach ($this->serviceContainers[$type] as $key => $image) {
       if (in_array($image['image'], array_keys($instances))) {
         // TODO: Determine service container ports, id, etc, and save it to the job.
-        $this->output->writeln("<comment>Found existing <options=bold>${image['image']}</options=bold> service container instance.</comment>");
+        Output::writeln("<comment>Found existing <options=bold>${image['image']}</options=bold> service container instance.</comment>");
         // TODO: Load up container parameters
         $container = $manager->find($instances[$image['image']]);
         $container_id = $container->getID();
@@ -326,7 +322,7 @@ class JobBase extends ContainerBase implements JobInterface {
         continue;
       }
       // Container not running, so we'll need to create it.
-      $this->output->writeln("<comment>No active <options=bold>${image['image']}</options=bold> service container instances found. Generating new service container.</comment>");
+      Output::writeln("<comment>No active <options=bold>${image['image']}</options=bold> service container instances found. Generating new service container.</comment>");
       // Instantiate container
       $container = new Container(['Image' => $image['image']]);
       // Get container configuration, which defines parameters such as exposed ports, etc.
@@ -344,7 +340,7 @@ class JobBase extends ContainerBase implements JobInterface {
       $this->serviceContainers[$type][$key]['id'] = $container_id;
       $this->serviceContainers[$type][$key]['name'] = $container_name;
       $short_id = substr($container_id, 0, 8);
-      $this->output->writeln("<comment>Created new <options=bold>${image['image']}</options=bold> container instance with ID <options=bold>$short_id</options=bold></comment>");
+      Output::writeln("<comment>Created new <options=bold>${image['image']}</options=bold> container instance with ID <options=bold>$short_id</options=bold></comment>");
     }
   }
 

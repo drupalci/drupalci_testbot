@@ -7,6 +7,7 @@
 namespace DrupalCI\Plugin\BuildSteps\environment;
 
 use Docker\Exception\ImageNotFoundException;
+use DrupalCI\Console\Output;
 use DrupalCI\Plugin\JobTypes\JobInterface;
 use DrupalCI\Plugin\PluginBase;
 
@@ -17,7 +18,7 @@ abstract class EnvironmentBase extends PluginBase {
 
   public function validateImageNames($containers, JobInterface $job) {
     // Verify that the appropriate container images exist
-    $job->getOutput()->writeln("<comment>Validating container images exist</comment>");
+    Output::writeLn("<comment>Validating container images exist</comment>");
     $docker = $job->getDocker();
     $manager = $docker->getImageManager();
     foreach ($containers as $key => $image_name) {
@@ -31,7 +32,7 @@ abstract class EnvironmentBase extends PluginBase {
         return FALSE;
       }
       $id = substr($image->getID(), 0, 8);
-      $job->getOutput()->writeln("<comment>Found image <options=bold>$name</options=bold> with ID <options=bold>$id</options=bold></comment>");
+      Output::writeLn("<comment>Found image <options=bold>$name</options=bold> with ID <options=bold>$id</options=bold></comment>");
     }
     return TRUE;
   }
@@ -48,7 +49,7 @@ abstract class EnvironmentBase extends PluginBase {
     foreach ($job->service_containers[$type] as $key => $image) {
       if (in_array($image['image'], array_keys($instances))) {
         // TODO: Determine service container ports, id, etc, and save it to the job.
-        $job->getOutput()->writeln("<comment>Found existing <options=bold>${image['image']}</options=bold> service container instance.</comment>");
+        Output::writeLn("<comment>Found existing <options=bold>${image['image']}</options=bold> service container instance.</comment>");
         // TODO: Load up container parameters
         $container = $manager->find($instances[$image['image']]);
         $container_id = $container->getID();
@@ -58,7 +59,7 @@ abstract class EnvironmentBase extends PluginBase {
         continue;
       }
       // Container not running, so we'll need to create it.
-      $job->getOutput()->writeln("<comment>No active <options=bold>${image['image']}</options=bold> service container instances found. Generating new service container.</comment>");
+      Output::writeLn("<comment>No active <options=bold>${image['image']}</options=bold> service container instances found. Generating new service container.</comment>");
       // Instantiate container
       $container = new Container(['Image' => $image['image']]);
       // Get container configuration, which defines parameters such as exposed ports, etc.
@@ -76,7 +77,7 @@ abstract class EnvironmentBase extends PluginBase {
       $job->service_containers[$type][$key]['id'] = $container_id;
       $job->service_containers[$type][$key]['name'] = $container_name;
       $short_id = substr($container_id, 0, 8);
-      $job->getOutput()->writeln("<comment>Created new <options=bold>${image['image']}</options=bold> container instance with ID <options=bold>$short_id</options=bold></comment>");
+      Output::writeLn("<comment>Created new <options=bold>${image['image']}</options=bold> container instance with ID <options=bold>$short_id</options=bold></comment>");
     }
   }
 
