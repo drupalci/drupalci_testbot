@@ -62,6 +62,7 @@ RUN apt-get install -y \
     ncurses-dev \
     php5-dev \
     re2c \
+    sqlite3 \
     sudo \
     unixODBC-dev \
     unzip
