@@ -42,14 +42,7 @@ class ContainerCommand extends PluginBase {
             $exec = explode(" ", $cmd);
             $exec_id = $manager->exec($instance, $exec, TRUE, TRUE, TRUE, TRUE);
             Output::writeLn("<info>Command created as exec id " . substr($exec_id, 0, 8) . "</info>");
-            $result = $manager->execstart($exec_id, function($output, $type) use ($job)  {
-              if ($type === 1) {
-                Output::writeLn("<info>$output</info>");
-              }
-              else {
-                $job->errorOutput('Error', $output);
-              }
-            });
+            $result = $manager->execstart($exec_id, ['DrupalCI\Console\Output', 'streamOutput']);
             //Response stream is never read you need to simulate a wait in order to get output
             $result->getBody()->getContents();
             Output::writeLn((string) $result);
