@@ -109,15 +109,16 @@ class CompileDefinition extends PluginBase {
         }
       }
     }
-    $transformers[] = function ($value) use ($replacements) { return strtr($value, $replacements); };
+    $transformers[] = function ($value) use ($replacements) {
+      return strtr($value, $replacements);
+    };
 
     // Process DCI_* variable substitution into test definition template
 
-    array_walk_recursive($definition, function ($value, $key) use ($transformers) {
+    array_walk_recursive($definition, function (&$value, $key) use ($transformers) {
       foreach ($transformers as $transformer) {
         $value = $transformer($value, $key);
       }
-      return $value;
     });
     $job->setDefinition($definition);
     return;

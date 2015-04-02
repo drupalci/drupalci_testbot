@@ -62,7 +62,7 @@ class RunCommand extends DrupalCICommandBase {
     else {
       // "Job Type" arguments
       $job_type = $definition;
-      $definition_file = __DIR__ . "../../Plugin/JobTypes/$job_type/drupalci.yml";
+      $definition_file = __DIR__ . "/../../Plugin/JobTypes/$job_type/drupalci.yml";
     }
     // TODO: Make sure $definition_file exists
 
