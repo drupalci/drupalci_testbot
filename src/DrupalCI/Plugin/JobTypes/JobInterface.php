@@ -128,4 +128,8 @@ interface JobInterface {
   public function getWorkingDir();
 
   public function setWorkingDir($working_directory);
+
+  public function setBuildID($id);
+
+  public function getBuildID();
 }

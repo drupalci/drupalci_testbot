@@ -75,6 +75,11 @@ class RunCommand extends DrupalCICommandBase {
     // Store the definition file argument in the job so we can act on it later
     $job->setDefinitionFile($definition_file);
 
+    // Create a unique job build_id
+    $build_id = $job_type . '_' . time();
+
+    $job->setBuildId($build_id);
+
     // Load the job definition, environment defaults, and any job-specific configuration steps which need to occur
     foreach (['compile_definition', 'validate_definition', 'setup_directories'] as $step) {
       $this->buildstepsPluginManager()->getPlugin('configure', $step)->run($job, NULL);

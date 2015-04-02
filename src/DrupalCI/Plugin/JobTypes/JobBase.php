@@ -23,6 +23,25 @@ class JobBase extends ContainerBase implements JobInterface {
   // Defines the job type
   public $jobtype = 'base';
 
+  // Defines a unique build ID
+  public $buildId;
+
+  /**
+   * @param mixed $buildId
+   */
+  public function setBuildId($buildId)
+  {
+    $this->buildId = $buildId;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getBuildId()
+  {
+    return $this->buildId;
+  }
+
   // Defines the job definition file
   protected $jobDefinitionFile;
 
