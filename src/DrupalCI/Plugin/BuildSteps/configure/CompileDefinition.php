@@ -125,6 +125,7 @@ class CompileDefinition extends PluginBase {
     array_walk_recursive($definition, function (&$value) use ($replacements) {
       $value = strtr($value, $replacements);
     });
+    $job->setBuildVars($dci_variables + $job->getBuildVars());
     $job->setDefinition($definition);
     return;
   }

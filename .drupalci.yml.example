@@ -31,6 +31,8 @@ setup:
 #  patch:
 #    - patch_file: 2438723-token-help.patch
 #      patch_dir: sites/all/modules/token/
+#dbcreate:
+#    mysql:
 install:
     command:
 #      - /usr/local/bin/composer global require drush/drush:dev-master
