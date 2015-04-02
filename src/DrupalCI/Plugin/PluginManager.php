@@ -46,9 +46,22 @@ class PluginManager {
   /**
    * {@inheritdoc}
    */
-  public function getPlugin($type, $plugin_id, $configuration = []) {
+  public function hasPlugin($type, $plugin_id) {
     if (!isset($this->pluginDefinitions)) {
       $this->pluginDefinitions = $this->discoverPlugins();
+    }
+    if (isset($this->pluginDefinitions[$type][$plugin_id])) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPlugin($type, $plugin_id, $configuration = []) {
+    if (!$this->hasPlugin($type, $plugin_id)) {
+      throw new PluginNotFoundException("Plugin type $type plugin id $plugin_id not found.");
     }
     if (!isset($this->plugins[$type][$plugin_id])) {
       if (isset($this->pluginDefinitions[$type][$plugin_id])) {
@@ -64,5 +77,4 @@ class PluginManager {
     }
     return $this->plugins[$type][$plugin_id];
   }
-
 }
