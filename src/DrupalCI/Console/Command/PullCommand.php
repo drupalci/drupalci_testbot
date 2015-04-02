@@ -42,7 +42,8 @@ class PullCommand extends DrupalCICommandBase {
     foreach ($images as $image) {
         $name = explode (':',$image);
         $container = $name[0];
-        if(!empty($tag)) {
+        // check if we have a tag in the input
+        if(!empty($name[1])) {
           $tag = $name[1];
         }
         else
