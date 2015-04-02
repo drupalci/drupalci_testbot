@@ -9,7 +9,7 @@
 namespace DrupalCI\Plugin\Preprocess\definition;
 
 /**
- * @PluginID("Patch")
+ * @PluginID("patch")
  */
 class Patch {
 
