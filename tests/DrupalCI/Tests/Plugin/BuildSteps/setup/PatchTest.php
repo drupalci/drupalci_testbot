@@ -20,7 +20,7 @@ class PatchTest extends DrupalCITestCase {
   public function testRun($error_count, $validate, $exec_result, $commands) {
     $this->job->expects($this->exactly($error_count))
       ->method('errorOutput');
-    $patch = new TestPatch([], 'patch', []);
+    $patch = new TestPatch();
     $args = [
       '%dir' => 'patch/dir',
       '%file' => 'test.file',
