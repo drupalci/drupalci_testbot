@@ -69,7 +69,10 @@ class PluginManager {
       $plugin_definition = isset($this->pluginDefinitions[$type][$plugin_id]) ?
         $this->pluginDefinitions[$type][$plugin_id] :
         $this->pluginDefinitions['generic'][$plugin_id];
-      $this->plugins[$type][$plugin_id] = new $plugin_definition['class']($configuration, $plugin_id, $plugin_definition);
+      /** @var \DrupalCI\Plugin\PluginBase $plugin */
+      $plugin = new $plugin_definition['class']($configuration, $plugin_id, $plugin_definition);
+      $plugin->setPluginManager($this);
+      $this->plugins[$type][$plugin_id] = $plugin;
     }
     return $this->plugins[$type][$plugin_id];
   }
