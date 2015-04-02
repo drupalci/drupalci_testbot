@@ -63,7 +63,13 @@ class InitDatabaseContainersCommand extends DrupalCICommandBase {
     else {
       if ($options['--no-interaction']) {
         // Non-interactive mode.
-        $names = array($this->default_build['database']);
+        if($this->default_build['database'] == 'all') {
+          $names = $container_names;
+        }
+        else
+        {
+          $names = array($this->default_build['database']);
+        }
       }
       else {
         $names = $this->getDbContainerNames($container_names, $input, $output);

@@ -22,8 +22,10 @@ class DrupalCICommandBase extends SymfonyCommand {
     // Defaults for the underlying commands i.e. when commands run with --no-interaction or
     // when we are given options to setup containers.
     protected $default_build = array(
-        'web' => 'drupalci/web-5.4',
-        'database' => 'drupalci/mysql-5.5',
+      'base'     => 'all',
+      'web'      => 'drupalci/web-5.4',
+      'database' => 'drupalci/mysql-5.5',
+      'php'      => 'all'
     );
 
     // Holds our Docker container manager

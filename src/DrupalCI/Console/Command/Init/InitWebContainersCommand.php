@@ -63,7 +63,13 @@ class InitWebContainersCommand extends DrupalCICommandBase {
     else {
       if ($options['--no-interaction']) {
         // Non-interactive mode.
-        $names = array($this->default_build['web']);
+        if($this->default_build['web'] == 'all') {
+          $names = $container_names;
+        }
+        else
+        {
+          $names = array($this->default_build['web']);
+        }
       }
       else {
         $names = $this->getWebContainerNames($container_names, $input, $output);

@@ -65,7 +65,13 @@ class InitPhpContainersCommand extends DrupalCICommandBase {
     else {
       if ($options['--no-interaction']) {
         // Non-interactive mode.
-        $names = array($this->default_build['php']);
+        if($this->default_build['php'] == 'all') {
+          $names = $container_names;
+        }
+        else
+        {
+          $names = array($this->default_build['php']);
+        }
       }
       else {
         $names = $this->getPhpContainerNames($container_names, $input, $output);
