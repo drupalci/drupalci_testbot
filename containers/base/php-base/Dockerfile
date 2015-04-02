@@ -21,7 +21,6 @@ RUN apt-get install -y \
     curl \
     freetds-dev \
     git \
-    htop \
     libaspell-dev \
     libbz2-dev \
     libc-client-dev \
@@ -59,7 +58,6 @@ RUN apt-get install -y \
     libxslt-dev \
     libz-dev \
     make \
-    mc \
     mysql-client \
     ncurses-dev \
     php5-dev \
