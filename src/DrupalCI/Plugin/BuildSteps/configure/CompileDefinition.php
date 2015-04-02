@@ -104,7 +104,7 @@ class CompileDefinition extends PluginBase {
           };
         }
         if ($plugin_manager->hasPlugin('definition', $name)) {
-          $definition[$key] = $plugin_manager->getPlugin('definition', $name)
+          $plugin_manager->getPlugin('definition', $name)
             ->process($definition, $value);
         }
       }

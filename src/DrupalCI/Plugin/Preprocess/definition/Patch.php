@@ -8,8 +8,6 @@
 
 namespace DrupalCI\Plugin\Preprocess\definition;
 
-use DrupalCI\Plugin\JobTypes\JobInterface;
-
 /**
  * @PluginID("Patch")
  */
@@ -23,13 +21,14 @@ class Patch {
    * Takes a string defining patches to be applied, and converts this to a
    * 'setup:patch:' array as expected to appear in a job definition
    */
-  public function process(array $definition, $value) {
-    $return = [];
+  public function process(array &$definition, $value) {
+    if (empty($definition['setup']['patch'])) {
+      $definition['setup']['patch'] = [];
+    }
     foreach (explode(';', $value) as $patch_string) {
       list($patch['patch_file'], $patch['patch_directory']) = explode(',', $patch_string);
-      $return[] = $patch;
+      $definition['setup']['patch'][] = $patch;
     }
-    return $return;
     // Input format: (string) $value = "file1.patch,patch_directory1;[file2.patch,patch_directory2];..."
     // Desired Result: [
     // ]
