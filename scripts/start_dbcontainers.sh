@@ -44,6 +44,16 @@ if [ "$1" = "-h" ] || [ "$1" = "--help" ];
   exit 0
 fi
 
+if [ "$1" = "all" ];
+  then
+  echo "You selected all: making sure all containers are pulled in"
+  for CONTAINER in $(find -name Dockerfile | awk -F"/" '{print $4}')
+  do
+    echo "docker pull drupalci/${CONTAINER}"
+    docker pull drupalci/${CONTAINER}
+  done
+fi
+
 # Check for database argument
 declare -A secondarg
 declare -A dbtypes
