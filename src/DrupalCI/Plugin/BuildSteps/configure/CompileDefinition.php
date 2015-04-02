@@ -174,39 +174,7 @@ class CompileDefinition extends PluginBase {
     }
 
     $job->job_definition = $job_definition;
-    /*
-### ./run.sh Options
-# Any valid Drupal branch or tag, like 8.0.x, 7.x or 7.30:
-DCI_DrupalBRANCH="8.0.x"
 
-# The identifier used by jenkins to name the Drupal docroot where all is stored:
-DCI_IDENTIFIER="build_$(date +%Y_%m_%d_%H%M%S)" # Only [a-z0-9-_.] allowed
-
-# The place where Drupal repos and DrupalDocRoot identifiers are kept:
-DCI_REPODIR="$HOME/testbotdata"
-
-# Request the runner to update the Drupal local repo before local cloning:
-DCI_UPDATEREPO="false"  # true to force repos update
-
-# By default we put the Drupal repo and docroots on the same place, but you can have BUILDSDIR elsewhere:
-DCI_BUILDSDIR="$DCI_REPODIR"
-
-# Same for the workspace:
-DCI_WORKSPACE="$DCI_BUILDSDIR/$DCI_IDENTIFIER/"
-
-# Install modules:
-DCI_DEPENDENCIES=""     # module1,module2,module2...
-
-# Git clone sandboxes:
-DCI_DEPENDENCIES_GIT="" # gitrepo1,branch;gitrepo2,branch;...
-
-# Download tgz modules:
-DCI_DEPENDENCIES_TGZ="" # module1_url.tgz,module1_url.tgz,...
-
-# Download and patch one or several patches:
-DCI_PATCH=""            # patch_url,apply_dir;patch_url,apply_dir;...
-
-*/
   }
 
 
@@ -214,5 +182,30 @@ DCI_PATCH=""            # patch_url,apply_dir;patch_url,apply_dir;...
 
   // TODO: If passed a job definition source file as a command argument, pass it in to the configure function
 
+
+  /*
+   * Testrunner -> Config Compilation Approach (rationalize test definition file versus ENV variables)
+
+- Mash up DCI_* ENV Variables and values from CONFIG
+
+- Run resulting list through
+	- foreach DCI_* variable
+		- if hasPlugin(DCI_*) then getPlugin(DCI_*)
+			- split getPlugin() into hasPlugin() and getPlugin(), where getPlugin() also calls hasPlugin().
+		- Each DCI_* plugin takes the value of that environment variable and the job definition array as arguments
+			- logic within each plugin expands that particular value in the parsed YAML job definition
+
+
+- Then array_walk_recursive() through the YAML job definition, doing a direct substitution for any ENV variable placeholders in the definition
+	- Mark ENV variable placeholders with %DCI_*%
+
+JobType classes:
+	- Need to define the default job definition array, with placeholders
+
+DrupalCI Run:
+	- Needs to take a file name OR a class name as it's argument.
+
+
+   */
 
 }
