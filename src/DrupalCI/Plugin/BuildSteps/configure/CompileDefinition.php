@@ -83,18 +83,20 @@ class CompileDefinition extends PluginBase {
     $cli_variables = array();
 
     // Combine the above to generate the final array of DCI_* key=>value pairs
-    $DCI_variables = $cli_variables + $environment_variables + $local_overrides + $jobtype_defaults + $platform_defaults;
+    $DCIvariables = $cli_variables + $environment_variables + $local_overrides + $jobtype_defaults + $platform_defaults;
 
     // Foreach DCI_* pair in the array, check if a plugin exists, and process if it does.  (Pass in test definition template)
-    foreach ($DCI_variables as $key => $value) {
-
-
-
+    foreach ($DCIvariables as $key => $data) {
+      $count = 1;
+      $name = str_replace("DCI_", "", $key, $count);
+      if ($this->pluginManager->hasPlugin('Preprocess', $name)) {
+        $this->pluginManager->getPlugin('Preprocess', $name)->run($job_defintion, $data);
+      }
     }
 
-
     // Process DCI_* variable substitution into test definition template
-      // - array_walk_recursive($yaml, function ($value) use ($env) { return strtr($value, $env)};);
+
+      // - array_walk_recursive($job_definition, function ($value) use ($DCIVariables) { return strtr($value, $env)};);
 
 
 
