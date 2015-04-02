@@ -59,9 +59,12 @@ RUN apt-get install -y \
     libxslt-dev \
     libz-dev \
     make \
+    mc \
+    mysql-client \
     ncurses-dev \
     php5-dev \
     re2c \
+    sqlite3 \
     sudo \
     unixODBC-dev \
     unzip
@@ -80,6 +83,9 @@ RUN echo 'eval "$(phpenv init -)"' >> /root/.bashrc
 ENV PATH /root/.phpenv/shims:/root/.phpenv/bin:$PATH
 
 RUN git clone --depth 1 https://github.com/CHH/php-build.git /root/.phpenv/plugins/php-build
+
+# TODO: Fix way to make sure www-data can read phpenv.
+RUN chmod 755 /root
 
 # Small hack for running the php compilation with more than one cpu core
 #RUN mv /usr/bin/make /usr/bin/make-system

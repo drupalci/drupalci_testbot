@@ -5,7 +5,6 @@
  * Contains \DrupalCI\Tests\Plugin\BuildSteps\generic\CommandTest.
  */
 
-
 namespace DrupalCI\Tests\Plugin\BuildSteps\generic;
 
 use Docker\Container;

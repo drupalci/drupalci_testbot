@@ -49,23 +49,5 @@ class PatchTest extends DrupalCITestCase {
 }
 
 class TestPatch extends Patch {
-
-  use TestSetupValidateDirTrait;
-
-  protected $commands = [];
-
-  protected $execResult;
-
-  function exec($command, &$output, &$result) {
-    $this->commands[] = $command;
-    $result = $this->execResult;
-  }
-
-  function getCommands() {
-    return $this->commands;
-  }
-
-  function setExecResult($exec_result) {
-    $this->execResult = $exec_result;
-  }
+  use TestSetupBaseTrait;
 }

@@ -55,7 +55,4 @@ class Patch extends SetupBase {
     }
   }
 
-  protected function exec($command, &$output, &$return_var) {
-    exec($command, $output, $return_var);
-  }
 }

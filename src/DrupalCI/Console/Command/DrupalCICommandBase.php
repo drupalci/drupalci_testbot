@@ -46,4 +46,12 @@ class DrupalCICommandBase extends SymfonyCommand {
     return $this->docker;
   }
 
+
+  public function getManager()
+  {
+    // if (null === $this->getManager()) {
+      return $this->getDocker()->getImageManager();
+    // }
+  }
+
 }
