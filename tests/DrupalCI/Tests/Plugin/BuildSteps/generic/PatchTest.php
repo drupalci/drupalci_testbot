@@ -10,6 +10,7 @@ namespace DrupalCI\Tests\Plugin\BuildSteps\generic;
 
 
 use DrupalCI\Plugin\BuildSteps\setup\Patch;
+use DrupalCI\Plugin\JobTypes\JobInterface;
 use DrupalCI\Tests\DrupalCITestCase;
 
 class PatchTest extends DrupalCITestCase {
@@ -45,7 +46,7 @@ class TestPatch extends Patch {
     return $this->commands;
   }
 
-  function validateDirectory() {
+  function validateDirectory(JobInterface $job, $dir) {
     return $this->validate;
   }
 
