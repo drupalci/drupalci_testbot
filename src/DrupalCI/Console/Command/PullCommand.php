@@ -74,6 +74,8 @@ class PullCommand extends DrupalCICommandBase {
       if (isset($output['progressDetail']['total'])) {
         $progressInformation[$output['id']]['current'] = $output['progressDetail']['current'];
         $progressInformation[$output['id']]['total'] = $output['progressDetail']['total'];
+        $progressInformation[$output['id']]['status'] = $output['status'];
+        $progressInformation[$output['id']]['id'] = $output['id'];
       }
 
       // Start the progress bar and advance it all the time we run the output function
@@ -81,8 +83,14 @@ class PullCommand extends DrupalCICommandBase {
       $progressbar->start();
       $progressbar->advance($current_transfer);
 
+      // foreach($progressInformation as $status){
+      //   if(isset($status['status']) && isset($status['id'])){
+      //     Output::write("<comment>".$status['id']." - ".$status['status']."</comment>");
+      //     Output::write("<comment>".$status['id']."</comment>");
+      //   }
+      // }
     });
-    $response->getBody()->getContents();
-    Output::writeln((string) $response);
+    // $response->getBody()->getContents();
+    // Output::writeln((string) $response);
   }
 }
