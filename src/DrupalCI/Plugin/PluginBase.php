@@ -30,7 +30,7 @@ abstract class PluginBase {
   /**
    * Plugin Manager
    *
-   * /DrupalCI/Plugin/PluginManager class
+   * @var \DrupalCI\Plugin\PluginManager
    */
   protected $pluginManager;
 
@@ -64,7 +64,5 @@ abstract class PluginBase {
     $this->pluginDefinition = $plugin_definition;
     $this->pluginManager = $plugin_manager;
   }
-
-  abstract public function run(JobInterface $job, $data);
 
 }

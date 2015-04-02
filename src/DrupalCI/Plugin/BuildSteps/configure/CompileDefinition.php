@@ -19,6 +19,7 @@ use DrupalCI\Plugin\JobTypes\JobInterface;
 use DrupalCI\Plugin\PluginBase;
 use DrupalCI\Console\Helpers\ConfigHelper;
 use DrupalCI\Console\Jobs\Definition\JobDefinition;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * @PluginID("compile_definition")
@@ -38,11 +39,9 @@ class CompileDefinition extends PluginBase {
 
     // For other 'jobtype' jobs, this is the file located at
     // DrupalCI/Plugin/JobTypes/<jobtype>/drupalci.yml.
-    $job_definition = new JobDefinition();
-    $job_definition->setSource($job->getDefinitionFile());
-    // Populates $job_definition->parameters
-    $job_definition->load();
-
+    if (!$definition = $this->loadYaml($job->getDefinitionFile())) {
+      $job->errorOutput('Error', 'Failed to load job definition YAML');
+    }
     // Get and parse external (i.e. anything not from the default definition
     // file) job argument parameters.  DrupalCI jobs are controlled via a
     // hierarchy of configuration settings, which define the behaviour of the
@@ -83,24 +82,50 @@ class CompileDefinition extends PluginBase {
     $cli_variables = array();
 
     // Combine the above to generate the final array of DCI_* key=>value pairs
-    $DCIvariables = $cli_variables + $environment_variables + $local_overrides + $jobtype_defaults + $platform_defaults;
+    $dci_variables = $cli_variables + $environment_variables + $local_overrides + $jobtype_defaults + $platform_defaults;
 
+    $replacements = [];
+    $transformers = [];
     // Foreach DCI_* pair in the array, check if a plugin exists, and process if it does.  (Pass in test definition template)
-    foreach ($DCIvariables as $key => $data) {
-      $count = 1;
-      $name = str_replace("DCI_", "", $key, $count);
-      if ($this->pluginManager->hasPlugin('Preprocess', $name)) {
-        $this->pluginManager->getPlugin('Preprocess', $name)->run($job_defintion, $data);
+    foreach ($dci_variables as $key => $value) {
+      if (preg_match('^DCI_(.+)$', $key, $matches)) {
+        $name = $matches[0];
+        $replacements["%$key%"] = $value;
+        if ($this->pluginManager->hasPlugin('Variable', $name)) {
+          $plugin = $this->pluginManager->getPlugin('Variable', $name);
+          $transformers[] = function ($value, $key) use ($plugin) {
+            return $plugin->process($value, $key);
+          };
+        }
+        if ($this->pluginManager->hasPlugin('Preprocess', $name)) {
+          $definition = $this->pluginManager->getPlugin('Preprocess', $name)
+            ->process($definition, $value);
+        }
       }
     }
+    $transformers[] = function ($value) use ($replacements) { return strtr($value, $replacements); };
 
     // Process DCI_* variable substitution into test definition template
 
-      // - array_walk_recursive($job_definition, function ($value) use ($DCIVariables) { return strtr($value, $env)};);
+    array_walk_recursive($definition, function ($value, $key) use ($transformers) {
+      foreach ($transformers as $transformer) {
+        $value = $transformer($value, $key);
+      }
+      return $value;
+    });
+    $job->setDefinition($definition);
+    return;
+  }
 
-
+  protected function loadYaml($source) {
+    if ($content = file_get_contents($source)) {
+      return Yaml::parse($content);
+    }
+    return [];
+  }
 
     /* *************** Legacy code below *********************** */
+  /*
 
     $confighelper = new ConfigHelper();
 
@@ -250,7 +275,6 @@ class CompileDefinition extends PluginBase {
   // TODO: If passed a job definition source file as a command argument, pass it in to the configure function
 
 
-  /*
    * Testrunner -> Config Compilation Approach (rationalize test definition file versus ENV variables)
 
 - Mash up DCI_* ENV Variables and values from CONFIG
