@@ -44,9 +44,12 @@ class SimpletestJob extends JobBase {
     // yml job definition file, this information would be stored in the value
     // at array('environment' => array('db' => VALUE)); thus the traversal path
     // value is the array keys 'environment:db'
-    'DCI_DBTYPE' => 'environment:db',
-    'DCI_DBVER' => 'environment:db',
-    'DCI_PHPVERSION' => 'environment:php',
+    'DCI_DBType' => 'environment:db',
+    'DCI_DBVersion' => 'environment:db',
+    'DCI_PHPVersion' => 'environment:web',
+    'DCI_DrupalBranch' => 'variables:DCI_DrupalBranch',
+    'DCI_DBUser' => 'variables:DCI_DBUser',
+    'DCI_DBPassword' => 'variables:DCI_DBPassword',
   );
 
   /**
@@ -59,10 +62,14 @@ class SimpletestJob extends JobBase {
    * functionality that each of these provided in the original Proof of Concept
    * implementation.
    *
-   * *** CURRENTLY SUPPORTED ***
+   * *** NEW ARGUMENTS, ADDED AFTER THE REFACTORING ***
    *
    *
-   * *** NOT YET SUPPORTED ***
+   *
+   * *** ORIGINAL PoC ARGUMENTS, CURRENTLY SUPPORTED ***
+   *
+   *
+   * *** ORIGINAL PoC ARGUMENTS, NOT YET SUPPORTED ***
    *  DCI_PATCH:         Local or remote Patches to be applied.
    *       Format: patch_location,apply_dir;patch_location,apply_dir;...
    *  DCI_DEPENDENCIES:  Contrib projects to be downloaded & patched.
@@ -94,6 +101,13 @@ class SimpletestJob extends JobBase {
    *  DCI_RUNSCRIPT:     Command to be executed
    */
   public $availableArguments = array(
+    // New arguments, added after the proof of concept
+    'DCI_DieOnFail',                      // Maps to the --die-on-fail flag in run-tests.sh
+    'DCI_SQLite',                         // Maps to the --sqlite flag in run-tests.sh
+
+    // Legacy arguments, leftover from the proof of concept
+    // Currently supported:
+    // Not yet supported:
     'DCI_PATCH',
     'DCI_DEPENDENCIES',
     'DCI_DEPENDENCIES_GIT',
@@ -130,6 +144,75 @@ class SimpletestJob extends JobBase {
   public $defaultArguments = array();
   // This is currently not used.  It is expected this will be superceded by a
   // default $jobDefinition property.
+
+  /**
+   * @array Storage property for the default job definition array for this job type
+   */
+  public $defaultDefinition;
+
+  /**
+   * @return array
+   */
+  protected function getDefaultDefinition() {
+    if (is_null($this->defaultDefinition)) {
+      // Build the 'default' job definition for this job type.
+      //$this->setDefaultDefinition($this->buildDefaultDefinition());
+    }
+    return $this->defaultDefinition;
+  }
+
+  protected function buildDefaultDefinition() {
+    // TODO: Currently just returning a static array; but we may eventually
+    // need to look at the items in the 'variables' key, and map them over to
+    // build steps further down in the array (for example, filling out the
+    // final run command.   On the other hand, this is just the 'default'
+    // definition ... we should be building this further down the code path;
+    // which may result in this being completely redundant.
+    return array(
+      'environment' => array(
+        // Database type and version (defines the service container)
+        // Defaults to mysql 5.5
+        'db' => array(
+          'mysql-5.5'
+        ),
+        // Requires web container (versus php-only container)
+        // Defaults to PHP 5.4
+        'web' => array(
+          'web-5.4'
+        ),
+        // Defines any Job-specific variables which are required to build out the
+        // rest of the job definition build steps, and/or configure aspects of
+        // the job run.
+        'variables' => array(
+          'DCI_DrupalBranch' => '8.0.x',
+          'DCI_DBUser' => 'drupaltestbot',
+          'DCI_DBPassword' => 'drupaltestbotpw',
+          'DCI_Concurrency' => '4'
+        ),
+
+        'setup' => array(
+          'checkout' => array(
+            'protocol' => 'git',
+            'repo' => 'git://drupalcode.org/project/drupal.git',
+            'branch' => '8.0.x',
+            'depth' => 1,
+            'checkout_dir' => './'
+          ),
+        ),
+        'execute' => array(
+          'command' => array(
+            "cd /data && php /data/core/scripts/run-tests.sh --sqlite /tmp/.ht.sqlite --die-on-fail --php /root/.phpenv/shims/php --dburl sqlite://tmp/.ht.sqlite ban"
+          )
+        )
+      )
+    );
+    //array_walk_recursive($yaml, function ($value) use ($env) { return strtr($value, $env)};);
+    // %DCI_VARIABLE%
+
+  }
+
+
+
 
 
 
