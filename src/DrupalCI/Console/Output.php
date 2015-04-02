@@ -25,6 +25,13 @@ class Output {
     static::$output->writeln($messages);
   }
 
+  /**
+   * @param string|array $messages
+   */
+  public static function write($messages) {
+    static::$output->write($messages);
+  }
+
   public static function error($type, $message) {
     if (!empty($type)) {
       static::$output->writeln("<error>$type</error>");
