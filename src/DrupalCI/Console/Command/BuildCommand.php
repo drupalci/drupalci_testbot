@@ -75,13 +75,6 @@ class BuildCommand extends DrupalCICommandBase {
       }
     });
 
-
-    //$response = $docker->build($context, $name, function ($result) use (&$content) {
-    //  if (isset($result['stream'])) {
-    //    $content .= $result['stream'];
-    //  }
-    //});
-    //$output->writeln($content);
     Output::writeln("--------------------- End build script ---------------------");
     $response->getBody()->getContents();
     Output::writeln((string) $response);
