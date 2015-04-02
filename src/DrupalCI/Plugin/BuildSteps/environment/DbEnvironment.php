@@ -39,8 +39,8 @@ class DbEnvironment extends EnvironmentBase {
   public function buildImageNames($data, JobInterface $job) {
     $images = [];
     foreach ($data as $key => $db_version) {
-      $images["db-$db_version"]['image'] = "drupalci/db-$db_version";
-      Output::writeLn("<info>Adding image: <options=bold>drupalci/db-$db_version</options=bold></info>");
+      $images["$db_version"]['image'] = "drupalci/$db_version";
+      Output::writeLn("<info>Adding image: <options=bold>drupalci/$db_version</options=bold></info>");
     }
     return $images;
   }
