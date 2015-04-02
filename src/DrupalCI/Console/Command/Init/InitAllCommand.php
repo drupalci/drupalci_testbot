@@ -100,6 +100,23 @@ class InitAllCommand extends DrupalCICommandBase {
     $returnCode = $cmd->run($cmdinput, $output);
     # TODO: Error Handling
 
+
+    // # Generate PHP Containers
+    // $cmd = $this->getApplication()->find('init:php');
+    //
+    // $arguments = array(
+    //   'command' => 'init:php',
+    // );
+    //
+    // $phptype = $input->getOption('phptype');
+    // if(isset($phptype)) {
+    //   $arguments['container_name'] = array($phptype);
+    // }
+    //
+    // $cmdinput = new ArrayInput($arguments + $options + $options_force);
+    // $returnCode = $cmd->run($cmdinput, $output);
+    // # TODO: Error Handling
+
     # Generate Base Config
     $cmd = $this->getApplication()->find('init:config');
     $cmdinput = new ArrayInput(array('command' => 'init:config') + $options);
