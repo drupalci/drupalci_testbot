@@ -39,7 +39,7 @@ class ContainerCommand extends PluginBase {
           Output::writeLn("<info>Executing on container instance $short_id:</info>");
           foreach ($data as $cmd) {
             Output::writeLn("<fg=magenta>$cmd</fg=magenta>");
-            $exec = explode(" ", $cmd);
+            $exec = ["/bin/bash", "-c", $cmd];
             $exec_id = $manager->exec($instance, $exec, TRUE, TRUE, TRUE, TRUE);
             Output::writeLn("<info>Command created as exec id " . substr($exec_id, 0, 8) . "</info>");
             $result = $manager->execstart($exec_id, function ($result, $type) {
