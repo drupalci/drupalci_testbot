@@ -15,39 +15,41 @@ class JobDefinition {
   // The definition source may be a local file or URL
   protected $source = NULL;
 
-  // TODO: Parse passed $source variable and set any per-component values which can be deduced.
-  //protected $scheme = NULL;
+  public function setSource($filename) {
+    $this->source = $filename;
+  }
 
-  //protected $host = NULL;
-
-  //protected $path = NULL;
-
-  //protected $directory = NULL;
-
-  //protected $filename = NULL;
+  public function getSource() {
+    return $this->source;
+  }
 
   // Placeholder for parsed key=>value parameter pairs
   protected $parameters = array();
 
-  public function load($source) {
-    if (!empty($source)) {
-      $this->source = $source;
-      $yaml = new Parser();
-      if ($content = file_get_contents($this->source)) {
-        $parameters = $yaml->parse($content);
-      }
-      else {
-        // TODO: Error Handling
-        return -1;
-      }
-      //$parameters = $yaml->parse(file_get_contents($this->source));
-      $this->parameters = $parameters;
+  public function load() {
+    $source = $this->source;
+    if (empty($source)) {
+      // TODO: Throw exception
+      return;
     }
+    $yaml = new Parser();
+    if ($content = file_get_contents($source)) {
+      $parameters = $yaml->parse($content);
+    }
+    else {
+      // TODO: Error Handling
+      return -1;
+    }
+    $this->parameters = $parameters;
     return;
   }
 
   public function getParameters() {
     return $this->parameters;
+  }
+
+  public function setParameters(array $parameters) {
+    $this->parameters = $parameters;
   }
 
 }

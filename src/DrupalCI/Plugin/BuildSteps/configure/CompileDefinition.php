@@ -29,19 +29,69 @@ class CompileDefinition extends PluginBase {
    * {@inheritdoc}
    */
   public function run(JobInterface $job, $data = NULL) {
-    // Get and parse test definition template (containing %DCI_*% placeholders)
-        // For 'generic' jobs, this is the file passed in on the 'drupalci run <filename>' command.
-        // For other 'jobtype' jobs, this is the drupalci.yml template file located in DrupalCI/Plugin/JobTypes/<jobtype>
+    // Get and parse the default definition template (containing %DCI_*%
+    // placeholders) into the job definition.
 
-    // Get and parse test argument parameters
-    // DrupalCI jobs are controlled via a hierarchy of configuration settings, which define the behaviour of the platform while running DrupalCI jobs.  This hierarchy is defined as follows, which each level overriding the previous:
+    // For 'generic' jobs, this is the file passed in on the
+    // 'drupalci run <filename>' command; and should be fully populated (though
+    // template placeholders *can* be supported).
+
+    // For other 'jobtype' jobs, this is the file located at
+    // DrupalCI/Plugin/JobTypes/<jobtype>/drupalci.yml.
+    $job_definition = new JobDefinition();
+    $job_definition->setSource($job->getDefinitionFile());
+    // Populates $job_definition->parameters
+    $job_definition->load();
+
+    // Get and parse external (i.e. anything not from the default definition
+    // file) job argument parameters.  DrupalCI jobs are controlled via a
+    // hierarchy of configuration settings, which define the behaviour of the
+    // platform while running DrupalCI jobs.  This hierarchy is defined as
+    // follows, which each level overriding the previous:
+
     // 1. Out-of-the-box DrupalCI platform defaults, as defined in DrupalCI/Plugin/JobTypes/JobBase->platformDefaults
+    $platform_defaults = $job->getPlatformDefaults();
+    if (!empty($platform_defaults)) {
+      Output::writeLn("<comment>Loading DrupalCI platform default arguments:</comment>");
+      Output::writeLn(implode(",", array_keys($platform_defaults)));
+    }
+
     // 2. Out-of-the-box DrupalCI JobType defaults, as defined in DrupalCI/Plugin/JobTypes/<jobtype>->defaultArguments
+    $jobtype_defaults = $job->getDefaultArguments();
+    if (!empty($jobtype_defaults)) {
+      Output::writeLn("<comment>Loading job type default arguments:</comment>");
+      Output::writeLn(implode(",", array_keys($jobtype_defaults)));
+    }
+
     // 3. Local overrides defined in ~/.drupalci/config
+    $confighelper = new ConfigHelper();
+    $local_overrides = $confighelper->getCurrentConfigSetParsed();
+    if (!empty($local_overrides)) {
+      Output::writeLn("<comment>Loading local DrupalCI environment config override arguments.</comment>");
+      Output::writeLn(implode(",", array_keys($local_overrides)));
+    }
+
     // 4. 'DCI_' namespaced environment variable overrides
-      // Use above to generate array of DCI_* key=>value pairs
+    $environment_variables = $confighelper->getCurrentEnvVars();
+    if (!empty($environment_variables)) {
+      Output::writeLn("<comment>Loading local namespaced environment variable override arguments.</comment>");
+      Output::writeLn(implode(",", array_keys($environment_variables)));
+    }
+
+    // 5. Additional variables passed in via the command line
+    // TODO: Not yet implemented
+    $cli_variables = array();
+
+    // Combine the above to generate the final array of DCI_* key=>value pairs
+    $DCI_variables = $cli_variables + $environment_variables + $local_overrides + $jobtype_defaults + $platform_defaults;
 
     // Foreach DCI_* pair in the array, check if a plugin exists, and process if it does.  (Pass in test definition template)
+    foreach ($DCI_variables as $key => $value) {
+      // TODO 
+
+
+    }
+
 
     // Process DCI_* variable substitution into test definition template
       // - array_walk_recursive($yaml, function ($value) use ($env) { return strtr($value, $env)};);
