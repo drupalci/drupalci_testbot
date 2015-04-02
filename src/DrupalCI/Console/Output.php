@@ -14,6 +14,10 @@ class Output {
    */
   static protected $output;
 
+  public static function getOutput() {
+    return static::$output;
+  }
+
   public static function setOutput($output) {
     static::$output = $output;
   }
