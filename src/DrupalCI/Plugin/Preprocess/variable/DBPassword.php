@@ -9,9 +9,9 @@
 namespace DrupalCI\Plugin\Preprocess\variable;
 
 /**
- * @PluginID("dbpass")
+ * @PluginID("dbpassword")
  */
-class DBPass extends DBUrlBase {
+class DBPassword extends DBUrlBase {
 
   public function process($dci_variable, $value) {
     return $this->buildUrl($dci_variable, 'pass', $value);

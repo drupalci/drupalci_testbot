@@ -22,4 +22,4 @@ setup:
 execute:
   command:
     # May need a DCI_RunScript Plugin to expand the runscript with other variables to be substituted.
-    - cd /data && php %DCI_RunScript% %DCI_TestGroups%
+    - cd /data && php %DCI_RunScript% --dburl %DCI_DBURL% %DCI_TestGroups%
