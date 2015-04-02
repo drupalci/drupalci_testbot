@@ -50,9 +50,9 @@ class PatchTest extends DrupalCITestCase {
 
 class TestPatch extends Patch {
 
-  protected $commands = [];
+  use TestSetupValidateDirTrait;
 
-  protected $validate = TRUE;
+  protected $commands = [];
 
   protected $execResult;
 
@@ -63,14 +63,6 @@ class TestPatch extends Patch {
 
   function getCommands() {
     return $this->commands;
-  }
-
-  function validateDirectory(JobInterface $job, $dir) {
-    return $this->validate;
-  }
-
-  function setValidate($validate) {
-    $this->validate = $validate;
   }
 
   function setExecResult($exec_result) {

@@ -17,9 +17,8 @@ use DrupalCI\Tests\DrupalCITestCase;
  */
 class ContainerCommandTest extends DrupalCITestCase {
 
-
   function testRun() {
-    $cmd = ['test_command', 'test_argument'];
+    $cmd = 'test_command test_argument';
     $instance = new Container([]);
 
     $body = $this->getMock('GuzzleHttp\Stream\StreamInterface');
@@ -37,7 +36,7 @@ class ContainerCommandTest extends DrupalCITestCase {
       ->will($this->returnValue($instance));
     $container_manager->expects($this->once())
       ->method('exec')
-      ->with($instance, $cmd, TRUE, TRUE, TRUE, TRUE)
+      ->with($instance, ['/bin/bash', '-c', $cmd], TRUE, TRUE, TRUE, TRUE)
       ->will($this->returnValue(1));
     $container_manager->expects($this->once())
       ->method('execstart')
@@ -58,6 +57,7 @@ class ContainerCommandTest extends DrupalCITestCase {
       ->will($this->returnValue(['php' => [['id' => 'dockerci/php-5.4']]]));
 
     $command = new ContainerCommand([], 'command', []);
-    $command->run($this->job, [implode(' ', $cmd)]);
+    $command->run($this->job, $cmd);
   }
+
 }
