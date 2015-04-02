@@ -238,7 +238,7 @@ class JobBase extends ContainerBase implements JobInterface {
     $volumes = $this->createContainerVolumes();
     if (!empty($volumes)) {
       //foreach ($volumes as $dir => $volume) {
-        $config['Binds'][] = $volumes;
+        $config['HostConfig']['Binds'] = $volumes;
       //}
     }
     $instance = new Container($config);
