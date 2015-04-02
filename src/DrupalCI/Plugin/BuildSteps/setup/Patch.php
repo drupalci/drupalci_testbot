@@ -36,14 +36,14 @@ class Patch extends SetupBase {
       $patchfile = $details['patch_file'];
       $patchdir = (!empty($details['patch_dir'])) ? $details['patch_dir'] : $workingdir;
       // Validate target directory.
-      if (!($directory = $this->validate_directory($job, $patchdir))) {
+      if (!($directory = $this->validateDirectory($job, $patchdir))) {
         // Invalid checkout directory
         $job->errorOutput("Error", "The patch directory <info>$directory</info> is invalid.");
         return;
       }
       $cmd = "patch -p1 -i $patchfile -d $directory";
 
-      exec($cmd, $cmdoutput, $result);
+      $this->exec($cmd, $cmdoutput, $result);
       if ($result !==0) {
         // The command threw an error.
         $job->errorOutput("Patch failed", "The patch attempt returned an error.");
@@ -53,5 +53,9 @@ class Patch extends SetupBase {
       }
       Output::writeLn("<comment>Patch <options=bold>$patchfile</options=bold> applied to directory <options=bold>$directory</options=bold></comment>");
     }
+  }
+
+  protected function exec($command, &$output, &$return_var) {
+    exec($command, $output, $return_var);
   }
 }

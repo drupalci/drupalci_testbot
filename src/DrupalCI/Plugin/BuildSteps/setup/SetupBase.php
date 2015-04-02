@@ -13,7 +13,7 @@ use DrupalCI\Plugin\PluginBase;
 
 abstract class SetupBase extends PluginBase {
 
-  protected function validate_directory(JobInterface $job, $dir) {
+  protected function validateDirectory(JobInterface $job, $dir) {
     // Validate target directory.  Must be within workingdir.
     $working_dir = $job->getWorkingDir();
     $true_dir = realpath($dir);

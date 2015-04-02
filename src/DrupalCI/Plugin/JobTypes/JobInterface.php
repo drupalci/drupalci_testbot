@@ -95,7 +95,7 @@ interface JobInterface {
    *
    * @return array
    *  An array of container IDs. The first key is the type, can be 'php' or
-   *  'web'. Web has everything php
+   *  'web'. Web has everything php plus Apache.
    */
   public function getExecContainers();
 
