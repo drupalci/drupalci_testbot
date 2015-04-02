@@ -31,16 +31,22 @@ class CompileDefinition extends PluginBase {
   public function run(JobInterface $job, $data = NULL) {
     // Get and parse test definitions
     // DrupalCI jobs are controlled via a hierarchy of configuration settings, which define the behaviour of the platform while running DrupalCI jobs.  This hierarchy is defined as follows, which each level overriding the previous:
-    // 1. Out-of-the-box DrupalCI defaults
-    // 2. Local overrides defined in ~/.drupalci/config
-    // 3. 'DCI_' namespaced environment variable overrides
-    // 4. Test-specific overrides passed inside a DrupalCI test definition (e.g. .drupalci.yml)
-    // 5. Custom overrides located inside a test definition defined via the $source variable when calling this function.
+
+    // 1. Out-of-the-box DrupalCI platform defaults, as defined in DrupalCI/Plugin/JobTypes/JobBase->platformDefaults
+    // 2. Out-of-the-box DrupalCI JobType defaults, as defined in DrupalCI/Plugin/JobTypes/<jobtype>/<JobType>Job->defaultDefinition
+
+    // 3. Local overrides defined in ~/.drupalci/config
+    // 4. 'DCI_' namespaced environment variable overrides
+    // 5. Test-specific overrides passed inside a DrupalCI test definition (e.g. .drupalci.yml)
+    // 6. Custom overrides located inside a test definition defined via the $source variable when calling this function.
 
     $confighelper = new ConfigHelper();
 
-    // Load job defaults
-    $platform_args = $job->getPlatformDefaults();
+    // Load platform defaults
+    $platform_defaults = $job->getPlatformDefaults();
+
+    //
+
     $default_args = $job->getDefaultArguments();
     if (!empty($default_args)) {
       Output::writeLn("<comment>Loading build variables for this job type.</comment>");
@@ -68,7 +74,7 @@ class CompileDefinition extends PluginBase {
     }
 
     // Create temporary config array to use in determining the definition file source
-    $config = $cli_args + $environment_args + $local_args + $default_args + $platform_args;
+    $config = $cli_args + $environment_args + $local_args + $default_args + $platform_defaults;
 
     // Load any build vars defined in the job definition file
     // Retrieve test definition file
