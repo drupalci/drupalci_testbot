@@ -149,7 +149,9 @@ class SimpletestJob extends JobBase {
     'DCI_CoreRepository' => 'git://drupalcode.org/project/drupal.git',
     'DCI_CoreBranch' => '8.0.x',
     'DCI_GitCheckoutDepth' => 1,
-    'DCI_RunScript' => "/data/core/scripts/run-tests.sh "
+    'DCI_RunScript' => "/data/core/scripts/run-tests.sh ",
+    'DCI_DBUser' => 'drupaltestbot',
+    'DCI_DBPassword' => 'drupaltestbotpw',
 
       // %DCI_SQLite% --sqlite /tmp/.ht.sqlite --die-on-fail --php /root/.phpenv/shims/php --dburl sqlite://tmp/.ht.sqlite ban"
   );
