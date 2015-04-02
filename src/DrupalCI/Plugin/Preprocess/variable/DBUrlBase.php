@@ -29,7 +29,7 @@ abstract class DBUrlBase extends PluginBase {
       }
       $url .= '@';
     }
-    $url .= $parts['path'];
+    $url .= $parts['host'];
     return $url;
   }
 
