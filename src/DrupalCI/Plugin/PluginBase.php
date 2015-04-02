@@ -35,24 +35,6 @@ abstract class PluginBase {
   protected $pluginManager;
 
   /**
-   * @param /DrupalCI/Plugin/PluginManager
-   */
-  public function setPluginManager($pluginManager)
-  {
-    $this->pluginManager = $pluginManager;
-  }
-
-  /**
-   * @return /DrupalCI/Plugin/PluginManager
-   */
-  public function getPluginManager()
-  {
-    return $this->pluginManager;
-  }
-
-
-
-  /**
    * Configuration information passed into the plugin.
    *
    * When using an interface like
@@ -76,15 +58,13 @@ abstract class PluginBase {
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, $plugin_amanger) {
     $this->configuration = $configuration;
     $this->pluginId = $plugin_id;
     $this->pluginDefinition = $plugin_definition;
-
-
-
-
+    $this->pluginManager = $plugin_amanger;
   }
 
   abstract public function run(JobInterface $job, $data);
+
 }
