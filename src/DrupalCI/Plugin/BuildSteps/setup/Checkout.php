@@ -52,8 +52,8 @@ class Checkout extends SetupBase {
 
   protected function setupCheckoutLocal(JobInterface $job, $details) {
     Output::writeLn("<info>Entering setupCheckoutLocal().</info>");
-    $source_dir = isset($details['srcdir']) ? $details['srcdir'] : './';
-    $checkoutdir = isset($details['checkout_dir']) ? $details['checkout_dir'] : $job->getWorkingDir();
+    $source_dir = isset($details['source_dir']) ? $details['source_dir'] : './';
+    $checkout_dir = isset($details['checkout_dir']) ? $details['checkout_dir'] : $job->getWorkingDir();
     // TODO: Ensure we don't end up with double slashes
     // Validate source directory
     if (!is_dir($source_dir)) {
@@ -61,7 +61,7 @@ class Checkout extends SetupBase {
       return;
     }
     // Validate target directory.  Must be within workingdir.
-    if (!($directory = $this->validateDirectory($job, $checkoutdir))) {
+    if (!($directory = $this->validateDirectory($job, $checkout_dir))) {
       // Invalidate checkout directory
       $job->errorOutput("Error", "The checkout directory <info>$directory</info> is invalid.");
       return;
