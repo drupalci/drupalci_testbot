@@ -14,7 +14,7 @@ namespace DrupalCI\Plugin\Preprocess\variable;
 class JobBuildId extends DBUrlBase {
 
   public function process($dci_variable, $value) {
-    return $this->buildUrl($dci_variable, 'path', $value);
+    return $this->buildUrl($dci_variable, 'path', "/$value");
   }
 
 }

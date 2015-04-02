@@ -84,7 +84,7 @@ class CompileDefinition extends PluginBase {
 
     // 5. Additional variables passed in via the command line
     // TODO: Not yet implemented
-    $cli_variables = array(['DCI_JOBBUILDID' => $job->getBuildID()]);
+    $cli_variables = ['DCI_JOBBUILDID' => $job->getBuildID()];
 
     // Combine the above to generate the final array of DCI_* key=>value pairs
     $dci_variables = $cli_variables + $environment_variables + $local_overrides + $jobtype_defaults + $platform_defaults;
