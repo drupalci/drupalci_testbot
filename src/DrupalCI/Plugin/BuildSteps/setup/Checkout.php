@@ -55,7 +55,7 @@ class Checkout extends SetupBase {
       return;
     }
     // Validate target directory.  Must be within workingdir.
-    if (!($directory = $this->validate_directory($job, $checkoutdir))) {
+    if (!($directory = $this->validateDirectory($job, $checkoutdir))) {
       // Invalidate checkout directory
       $job->errorOutput("Error", "The checkout directory <info>$directory</info> is invalid.");
       return;
@@ -79,7 +79,7 @@ class Checkout extends SetupBase {
     $checkoutdir = isset($details['checkout_dir']) ? $details['checkout_dir'] : $workingdir;
     // TODO: Ensure we don't end up with double slashes
     // Validate target directory.  Must be within workingdir.
-    if (!($directory = $this->validate_directory($job, $checkoutdir))) {
+    if (!($directory = $this->validateDirectory($job, $checkoutdir))) {
       // Invalid checkout directory
       $job->errorOutput("Error", "The checkout directory <info>$directory</info> is invalid.");
       return;
