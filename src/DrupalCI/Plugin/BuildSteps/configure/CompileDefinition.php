@@ -87,7 +87,7 @@ class CompileDefinition extends PluginBase {
 
     // Foreach DCI_* pair in the array, check if a plugin exists, and process if it does.  (Pass in test definition template)
     foreach ($DCI_variables as $key => $value) {
-      // TODO 
+
 
 
     }
