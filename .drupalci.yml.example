@@ -33,5 +33,6 @@ setup:
 #      patch_dir: sites/all/modules/token/
 install:
     command: 
-      - /usr/local/bin/composer global require drush/drush:dev-master 
-      - /root/.composer/vendor/bin/drush --version
+#      - /usr/local/bin/composer global require drush/drush:dev-master 
+       - cd /data && php /data/core/scripts/run-tests.sh --sqlite /tmp/.ht.sqlite --die-on-fail --php /root/.phpenv/shims/php --dburl sqlite://tmp/.ht.sqlite ban
+
