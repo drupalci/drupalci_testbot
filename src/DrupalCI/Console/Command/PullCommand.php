@@ -92,5 +92,6 @@ class PullCommand extends DrupalCICommandBase {
     });
     // $response->getBody()->getContents();
     // Output::writeln((string) $response);
+    Output::writeln("");
   }
 }
