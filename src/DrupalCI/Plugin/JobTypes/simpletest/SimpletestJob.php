@@ -10,20 +10,59 @@ namespace DrupalCI\Plugin\JobTypes\simpletest;
 use DrupalCI\Plugin\JobTypes\Component\EnvironmentValidator;
 use DrupalCI\Plugin\JobTypes\JobBase;
 
+
+
 /**
  * @PluginID("simpletest")
  */
+  // ^^^ Use an annotation to define the job type name.
 
 class SimpletestJob extends JobBase {
+  // ^^^ Extend JobBase, to get the main test runner functionality
 
   /**
    * @var string
    */
   public $jobtype = 'simpletest';
+  // I don't believe this property is currently used; but anticipate we will
+  // want to reference the jobtype from the object itself at some point.
+
+
+  // ****************** Start Validation related properties ******************
+  /**
+   * Required Arguments, which must be present in order for the job to attempt
+   * to run.
+   *
+   * The expected format here is an array of key=>value pairs, where the key is
+   * the name of a DCI_* environment variable, and the value is the array key
+   * path from the parsed .yml file job definition that would need to be
+   * traversed to get to the location that variable would exist in the job
+   * definition.
+   */
+  public $requiredArguments = array(
+    // DCI_DBTYPE defines the database type (mysql, pgsql, etc). In a parsed
+    // yml job definition file, this information would be stored in the value
+    // at array('environment' => array('db' => VALUE)); thus the traversal path
+    // value is the array keys 'environment:db'
+    'DCI_DBTYPE' => 'environment:db',
+    'DCI_DBVER' => 'environment:db',
+    'DCI_PHPVERSION' => 'environment:php',
+  );
 
   /**
    * Return a list of argument variables which are relevant to this job type.
    *
+   * For the Simpletest job type in the original DrupalCI proof of concept,
+   * this included the following list (copied from the original BASH script).
+   * Since the refresh, many of these are not currently evaluated; but they are
+   * currently included here as the eventual intent is to support all of the
+   * functionality that each of these provided in the original Proof of Concept
+   * implementation.
+   *
+   * *** CURRENTLY SUPPORTED ***
+   *
+   *
+   * *** NOT YET SUPPORTED ***
    *  DCI_PATCH:         Local or remote Patches to be applied.
    *       Format: patch_location,apply_dir;patch_location,apply_dir;...
    *  DCI_DEPENDENCIES:  Contrib projects to be downloaded & patched.
@@ -83,34 +122,22 @@ class SimpletestJob extends JobBase {
     'DCI_RUNSCRIPT',
   );
 
+  // ******************* End Validation related properties *******************
+
+
+  // **************** Start job definition related properties ****************
+
   public $defaultArguments = array();
-
-  public $requiredArguments = array(
-    'DCI_DBTYPE' => 'environment:db',
-    'DCI_DBVER' => 'environment:db',
-    'DCI_PHPVERSION' => 'environment:php',
-  );
-
-  public function buildSteps() {
-    // TODO: buildSteps() is now legacy, left over from before the March 2015 refactoring.
-    // To be replaced with a default job definition array.
-    return array(
-      'validate',
-      'environment',
-      'setup',
-      //'install',
-      //'validate_install',
-      'compatibility_bridge',
-      'execute',
-      //'complete',
-      //'success',
-      //'failure'
-    );
-  }
-
-  protected $variables = array();
+  // This is currently not used.  It is expected this will be superceded by a
+  // default $jobDefinition property.
 
 
+
+
+
+
+  // *********************** Start legacy / unused code ***********************
+  // Included here to support future development, which may leverage the logic.
   public function compatibility_bridge() {
     // TODO: This is legacy, from before the March 2015 refactoring.  Initial purpose was to maintain backwards compatibility with the Proof of Concept implementation scripts.
 
@@ -153,9 +180,6 @@ class SimpletestJob extends JobBase {
     }
 
     $this->cmd_prefix = $cmd_prefix;
-
-
-
   }
 
   protected $cmd_prefix = "";
@@ -167,5 +191,6 @@ class SimpletestJob extends JobBase {
     $this->shellCommand($cmd);
     return;
   }
+  // ************************ End legacy / unused code ************************
 
 }
