@@ -17,6 +17,7 @@ use Symfony\Component\Console\Application;
 use DrupalCI\Console\Command\Init\InitAllCommand;
 use DrupalCI\Console\Command\Init\InitConfigCommand;
 use DrupalCI\Console\Command\BuildCommand;
+use DrupalCI\Console\Command\PullCommand;
 use DrupalCI\Console\Command\CleanCommand;
 use DrupalCI\Console\Command\RunCommand;
 use DrupalCI\Console\Command\Config\ConfigListCommand;
@@ -42,6 +43,7 @@ class DrupalCIConsoleApp extends Application {
     parent::__construct($name, $version);
     $commands = [
       new BuildCommand(),
+      new PullCommand(),
       new CleanCommand(),
       new ConfigListCommand(),
       new ConfigLoadCommand(),
