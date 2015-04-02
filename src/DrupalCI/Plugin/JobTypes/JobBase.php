@@ -237,9 +237,9 @@ class JobBase extends ContainerBase implements JobInterface {
     // Add volumes
     $volumes = $this->createContainerVolumes();
     if (!empty($volumes)) {
-      foreach ($volumes as $dir => $volume) {
-        $config['Volumes']["$dir"] = $volume;
-      }
+      //foreach ($volumes as $dir => $volume) {
+        $config['HostConfig']['Binds'] = $volumes;
+      //}
     }
     $instance = new Container($config);
     $manager->create($instance);
@@ -273,7 +273,7 @@ class JobBase extends ContainerBase implements JobInterface {
     $volumes = array();
     // Map working directory
     $working = $this->workingDirectory;
-    $volumes[$working] = array();
+    $volumes = array("$working:/data");
     // TODO: Map results directory
     return $volumes;
   }

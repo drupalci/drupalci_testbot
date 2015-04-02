@@ -36,7 +36,7 @@ class Fetch extends SetupBase {
       $url = $details['url'];
       $workingdir = realpath($job->getWorkingDir());
       $fetchdir = (!empty($details['fetch_dir'])) ? $details['fetch_dir'] : $workingdir;
-      if (!($directory = $this->validate_directory($job, $fetchdir))) {
+      if (!($directory = $this->validateDirectory($job, $fetchdir))) {
         // Invalid checkout directory
         $job->errorOutput("Error", "The fetch directory <info>$directory</info> is invalid.");
         return;
