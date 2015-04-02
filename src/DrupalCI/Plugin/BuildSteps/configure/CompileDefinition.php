@@ -108,11 +108,6 @@ class CompileDefinition extends PluginBase {
         }
       }
     }
-    // DCI_TESTGROUPS needs to go last so no plugin, sorry.
-    if (isset($dci_variables['DCI_RunScript'])) {
-      $test_groups = isset($dci_variables['DCI_TESTGROUPS']) ? $dci_variables['DCI_TESTGROUPS'] : '--all';
-      $dci_variables['DCI_RunScript'] .= " $test_groups";
-    }
     // Foreach DCI_* pair in the array, check if a plugin exists, and process if it does.  (Pass in test definition template)
     foreach ($dci_variables as $key => $value) {
       if (preg_match('/^DCI_(.+)$/', $key, $matches)) {
