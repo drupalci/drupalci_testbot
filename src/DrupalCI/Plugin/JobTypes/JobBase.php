@@ -273,7 +273,7 @@ class JobBase extends ContainerBase implements JobInterface {
     $volumes = array();
     // Map working directory
     $working = $this->workingDirectory;
-    $volumes = array("$working:/data');
+    $volumes = array("$working:/data");
     // TODO: Map results directory
     return $volumes;
   }
