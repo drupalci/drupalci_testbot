@@ -1,5 +1,7 @@
 <?php
 
+// TODO : Currently not used since we don't have php containers and use web containers at the moment.
+
 /**
  * @file
  * Command class for init.
