@@ -27,6 +27,7 @@ class InitBaseContainersCommand extends DrupalCICommandBase {
       ->setName('init:base')
       ->setDescription('Build initial DrupalCI base containers')
       ->addArgument('container_name', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'Docker container image(s) to build.')
+      ->addOption('forcebuild', null, InputOption::VALUE_NONE, 'Force Building Environments locally rather than pulling the fslayers')
     ;
   }
 
@@ -77,8 +78,13 @@ class InitBaseContainersCommand extends DrupalCICommandBase {
       return;
     }
     else {
-
-      $cmd = $this->getApplication()->find('build');
+      if($input->getOption('forcebuild')) {
+        $cmd = $this->getApplication()->find('build');
+      }
+      else
+      {
+        $cmd = $this->getApplication()->find('pull');
+      }
       $arguments = array(
         'command' => 'build',
         'container_name' => $names
