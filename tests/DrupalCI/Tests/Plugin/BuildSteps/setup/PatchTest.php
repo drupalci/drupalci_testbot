@@ -2,12 +2,11 @@
 
 /**
  * @file
- * Contains \DrupalCI\Tests\Plugin\BuildSteps\generic\PatchTest.
+ * Contains \DrupalCI\Tests\Plugin\BuildSteps\setup\PatchTest.
  */
 
 
-namespace DrupalCI\Tests\Plugin\BuildSteps\generic;
-
+namespace DrupalCI\Tests\Plugin\BuildSteps\setup;
 
 use DrupalCI\Plugin\BuildSteps\setup\Patch;
 use DrupalCI\Plugin\JobTypes\JobInterface;
