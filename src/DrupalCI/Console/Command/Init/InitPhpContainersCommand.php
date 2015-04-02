@@ -62,8 +62,8 @@ class InitPhpContainersCommand extends DrupalCICommandBase {
     }
     else {
       if ($options['--no-interaction']) {
-        // Non-interactive mode.  Default to PHP 5.4
-        $names = array('php-5.4');
+        // Non-interactive mode.
+        $names = array($this->default_build['php']);
       }
       else {
         $names = $this->getPhpContainerNames($container_names, $input, $output);
@@ -99,11 +99,12 @@ class InitPhpContainersCommand extends DrupalCICommandBase {
   protected function getPhpContainerNames($containers, InputInterface $input, OutputInterface $output) {
     # Prompt the user
     $helper = $this->getHelperSet()->get('question');
+    $defaultcontainer = array_flip($containers);
     $containers[] = 'all';
     $question = new ChoiceQuestion(
-      '<fg=cyan;bg=blue>Please select the numbers corresponding to which DrupalCI web environments to support. Separate multiple entries with commas. (Default: [0])</fg=cyan;bg=blue>',
+      '<fg=cyan;bg=blue>Please select the numbers corresponding to which DrupalCI web environments to support. Separate multiple entries with commas. (Default: ['.$defaultcontainer[$this->default_build['php']].'])</fg=cyan;bg=blue>',
       $containers,
-      '0'
+      $defaultcontainer[$this->default_build['php']]
     );
     $question->setMultiselect(true);
 

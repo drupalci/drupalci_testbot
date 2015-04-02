@@ -62,8 +62,8 @@ class InitDatabaseContainersCommand extends DrupalCICommandBase {
     }
     else {
       if ($options['--no-interaction']) {
-        // Non-interactive mode.  Default to MySql 5.5
-        $names = array('mysql-5.5');
+        // Non-interactive mode.
+        $names = array($this->default_build['database']);
       }
       else {
         $names = $this->getDbContainerNames($container_names, $input, $output);
@@ -98,11 +98,11 @@ class InitDatabaseContainersCommand extends DrupalCICommandBase {
   protected function getDbContainerNames($containers, InputInterface $input, OutputInterface $output) {
     # Prompt the user
     $helper = $this->getHelperSet()->get('question');
-    $containers[] = 'all';
-    $question = new ChoiceQuestion(
-      '<fg=cyan;bg=blue>Please select the numbers corresponding to which DrupalCI database environments to support.  Separate multiple entries with commas. (Default: [0])</fg=cyan;bg=blue>',
+    $defaultcontainer = array_flip($containers);
+    $containers[] = 'all';    $question = new ChoiceQuestion(
+      '<fg=cyan;bg=blue>Please select the numbers corresponding to which DrupalCI database environments to support.  Separate multiple entries with commas. (Default: ['. $defaultcontainer[$this->default_build['database']].'])</fg=cyan;bg=blue>',
       $containers,
-      '2'
+      $defaultcontainer[$this->default_build['database']]
     );
     $question->setMultiselect(true);
 
