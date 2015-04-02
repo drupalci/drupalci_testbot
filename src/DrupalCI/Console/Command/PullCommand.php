@@ -15,6 +15,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Docker\Context\Context;
 use DrupalCI\Console\Output;
+use Symfony\Component\Console\Helper\ProgressBar;
+
 
 class PullCommand extends DrupalCICommandBase {
 
@@ -40,9 +42,12 @@ class PullCommand extends DrupalCICommandBase {
     foreach ($images as $image) {
         $name = explode (':',$image);
         $container = $name[0];
-        $tag = $name[1];
-        if(empty($tag)) {
-           $tag = 'latest';
+        if(!empty($tag)) {
+          $tag = $name[1];
+        }
+        else
+        {
+          $tag = 'latest';
         }
         Output::writeln("<comment>Pulling <options=bold>$container</options=bold> container</comment>");
         $this->pull($container ,$tag , $input);
@@ -53,17 +58,30 @@ class PullCommand extends DrupalCICommandBase {
    * (#inheritdoc)
    */
   protected function pull($name, $tag, InputInterface $input) {
-    Output::writeln("-------------------- Start pulling --------------------");
     $manager = $this->getManager();
-    $response = $manager->pull($name, $tag, function ($output) {
-      if (isset($output['stream'])) {
-        Output::writeLn('<info>' . $output['stream'] . '</info>');
+    $progressInformation = array();
+    $response = $manager->pull($name, $tag, function ($output) use (&$progressInformation) {
+
+      // Initialize the Counting on how far we are away from completing the docker pull process
+      $current_transfer = 0;
+      $total_transfer = 0;
+      foreach($progressInformation as $value ) {
+        $current_transfer = $current_transfer + $value['current'];
+        $total_transfer = $total_transfer + $value['total'];
       }
-      elseif (isset($output['error'])) {
-        Output::error('Error', $output['error']);
+
+      // Add the progress data to the array we store in the closure
+      if (isset($output['progressDetail']['total'])) {
+        $progressInformation[$output['id']]['current'] = $output['progressDetail']['current'];
+        $progressInformation[$output['id']]['total'] = $output['progressDetail']['total'];
       }
+
+      // Start the progress bar and advance it all the time we run the output function
+      $progressbar = new ProgressBar(Output::getOutput(), $total_transfer);
+      $progressbar->start();
+      $progressbar->advance($current_transfer);
+
     });
-    Output::writeln("--------------------- End pulling ---------------------");
     $response->getBody()->getContents();
     Output::writeln((string) $response);
   }
