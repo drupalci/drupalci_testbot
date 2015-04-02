@@ -23,6 +23,9 @@ class JobBase extends ContainerBase implements JobInterface {
   // Defines the job type
   public $jobtype = 'base';
 
+  // Defines the job definition file
+  protected $jobDefinitionFile;
+
   // Defines argument variable names which are valid for this job type
   public $availableArguments = array();
 
@@ -120,6 +123,13 @@ class JobBase extends ContainerBase implements JobInterface {
     $this->jobDefinition = $job_definition;
   }
 
+  public function getDefinitionFile() {
+    return $this->jobDefinitionFile;
+  }
+
+  public function setDefinitionFile($filename) {
+    $this->jobDefinitionFile = $filename;
+  }
   public function getDefaultArguments() {
     return $this->defaultArguments;
   }

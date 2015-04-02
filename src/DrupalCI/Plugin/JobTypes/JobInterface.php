@@ -113,6 +113,10 @@ interface JobInterface {
 
   public function setDefinition(array $job_definition);
 
+  public function getDefinitionFile();
+
+  public function setDefinitionFile($filename);
+
   public function getDefaultArguments();
 
   public function getPlatformDefaults();

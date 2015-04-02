@@ -41,6 +41,7 @@ class RunCommand extends DrupalCICommandBase {
       ->setName('run')
       ->setDescription('Execute a given job run.')
       ->addArgument('definition', InputArgument::OPTIONAL, 'Job definition.');
+    // TODO: Add 'definition file name' as an option
   }
 
   /**
@@ -48,11 +49,22 @@ class RunCommand extends DrupalCICommandBase {
    */
   public function execute(InputInterface $input, OutputInterface $output) {
     $definition = $input->getArgument('definition');
-
+    // The definition argument is optional, so we need to set a default definition file if it's not provided.
     if (!$definition) {
-      $definition = "drupalci.yml";
+      $definition = "./drupalci.yml";
     }
-    $job_type = (substr(trim($definition), -4) == ".yml") ? 'generic' : $definition;
+    // Populate the job type and definition file variables
+    if (substr(trim($definition), -4) == ".yml") {
+      // "File" arguments
+      $job_type = 'generic';
+      $definition_file = $definition;
+    }
+    else {
+      // "Job Type" arguments
+      $job_type = $definition;
+      $definition_file = __DIR__ . "../../Plugin/JobTypes/$job_type/drupalci.yml";
+    }
+    // TODO: Make sure $definition_file exists
 
     /** @var $job \DrupalCI\Plugin\JobTypes\JobInterface */
     $job = $this->jobPluginManager()->getPlugin($job_type, $job_type);
@@ -60,17 +72,10 @@ class RunCommand extends DrupalCICommandBase {
     // Link our $output variable to the job, so that jobs can display their work.
     Output::setOutput($output);
 
-    // Load the default job definition template for this job type
-    // TODO: How?  Do we do this here, or in CompileDefinition.php?
-    
+    // Store the definition file argument in the job so we can act on it later
+    $job->setDefinitionFile($definition_file);
 
-
-
-    // TODO: Create hook to allow for jobtype-specific pre-configuration.
-    // We'll need this if we want to (as an example) convert travisci
-    // definitions to drupalci definitions.
     // Load the job definition, environment defaults, and any job-specific configuration steps which need to occur
-
     foreach (['compile_definition', 'validate_definition', 'setup_directories'] as $step) {
       $this->buildstepsPluginManager()->getPlugin('configure', $step)->run($job, NULL);
     }
