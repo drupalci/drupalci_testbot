@@ -22,6 +22,11 @@ class PluginManager {
    */
   protected $pluginType;
 
+  /**
+   * @var array
+   */
+  protected $pluginDefinitions;
+
   public function __construct($plugin_type) {
     $this->pluginType = $plugin_type;
   }
@@ -50,31 +55,23 @@ class PluginManager {
     if (!isset($this->pluginDefinitions)) {
       $this->pluginDefinitions = $this->discoverPlugins();
     }
-    if (isset($this->pluginDefinitions[$type][$plugin_id]) || isset($this->pluginDefinitions['generic'][$plugin_id])) {
-      return TRUE;
-    }
-    return FALSE;
+    return (isset($this->pluginDefinitions[$type][$plugin_id]) || isset($this->pluginDefinitions['generic'][$plugin_id]));
   }
 
   /**
    * {@inheritdoc}
    */
   public function getPlugin($type, $plugin_id, $configuration = []) {
-    if (!$this->hasPlugin($type, $plugin_id)) {
-      throw new PluginNotFoundException("Plugin type $type plugin id $plugin_id not found.");
-    }
     if (!isset($this->plugins[$type][$plugin_id])) {
-      if (isset($this->pluginDefinitions[$type][$plugin_id])) {
-        $plugin_definition = $this->pluginDefinitions[$type][$plugin_id];
-      }
-      elseif (isset($this->pluginDefinitions['generic'][$plugin_id])) {
-        $plugin_definition = $this->pluginDefinitions['generic'][$plugin_id];
-      }
-      else {
+      if (!$this->hasPlugin($type, $plugin_id)) {
         throw new PluginNotFoundException("Plugin type $type plugin id $plugin_id not found.");
       }
+      $plugin_definition = isset($this->pluginDefinitions[$type][$plugin_id]) ?
+        $this->pluginDefinitions[$type][$plugin_id] :
+        $this->pluginDefinitions['generic'][$plugin_id];
       $this->plugins[$type][$plugin_id] = new $plugin_definition['class']($configuration, $plugin_id, $plugin_definition);
     }
     return $this->plugins[$type][$plugin_id];
   }
+
 }
