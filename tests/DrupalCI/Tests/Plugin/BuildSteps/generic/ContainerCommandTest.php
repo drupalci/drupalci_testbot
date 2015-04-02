@@ -55,7 +55,7 @@ class ContainerCommandTest extends DrupalCITestCase {
       ->method('getExecContainers')
       ->will($this->returnValue(['php' => [['id' => 'dockerci/php-5.4']]]));
 
-    $command = new ContainerCommand([], 'command', []);
+    $command = new ContainerCommand();
     $command->run($this->job, $cmd);
   }
 

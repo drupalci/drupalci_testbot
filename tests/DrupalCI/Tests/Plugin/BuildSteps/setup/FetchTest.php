@@ -32,7 +32,7 @@ class FetchTest extends DrupalCITestCase {
       ->with($url)
       ->will($this->returnValue($request));
 
-    $fetch = new TestFetch([], 'fetch', []);
+    $fetch = new TestFetch();
     $fetch->setValidate($dir);
     $fetch->setHttpClient($http_client);
     $fetch->run($this->job, [['url' => $url]]);
