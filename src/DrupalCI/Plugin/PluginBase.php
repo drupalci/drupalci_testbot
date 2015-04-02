@@ -28,13 +28,6 @@ abstract class PluginBase {
   protected $pluginDefinition;
 
   /**
-   * Plugin Manager
-   *
-   * @var \DrupalCI\Plugin\PluginManager
-   */
-  protected $pluginManager;
-
-  /**
    * Configuration information passed into the plugin.
    *
    * When using an interface like
@@ -58,11 +51,10 @@ abstract class PluginBase {
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    */
-  public function __construct(array $configuration = [], $plugin_id = '', $plugin_definition = [], $plugin_manager = NULL) {
+  public function __construct(array $configuration = [], $plugin_id = '', $plugin_definition = []) {
     $this->configuration = $configuration;
     $this->pluginId = $plugin_id;
     $this->pluginDefinition = $plugin_definition;
-    $this->pluginManager = $plugin_manager;
   }
 
 }
