@@ -97,9 +97,14 @@ class CompileDefinition extends PluginBase {
         if ($plugin_manager->hasPlugin('variable', $name)) {
           $plugin = $plugin_manager->getPlugin('variable', $name);
           // @TODO: perhaps this should be on the annotation.
-          $new_key = $plugin->key();
+          $new_keys = $plugin->key();
+          if (!is_array($new_keys)) {
+            $new_keys = [$new_keys];
+          }
           // @TODO: error handling.
-          $dci_variables[$new_key] = $plugin->process($dci_variables[$new_key], $value);
+          foreach ($new_keys as $new_key) {
+            $dci_variables[$new_key] = $plugin->process($dci_variables[$new_key], $value, $new_key);
+          }
         }
       }
     }
