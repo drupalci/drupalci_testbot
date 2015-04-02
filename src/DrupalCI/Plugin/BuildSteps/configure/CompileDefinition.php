@@ -18,13 +18,18 @@ use DrupalCI\Console\Output;
 use DrupalCI\Plugin\JobTypes\JobInterface;
 use DrupalCI\Plugin\PluginBase;
 use DrupalCI\Console\Helpers\ConfigHelper;
-use DrupalCI\Console\Jobs\Definition\JobDefinition;
+use DrupalCI\Plugin\PluginManager;
 use Symfony\Component\Yaml\Yaml;
 
 /**
  * @PluginID("compile_definition")
  */
 class CompileDefinition extends PluginBase {
+
+  /**
+   * @var \DrupalCI\Plugin\PluginManager;
+   */
+  protected $pluginManager;
 
   /**
    * {@inheritdoc}
@@ -86,19 +91,20 @@ class CompileDefinition extends PluginBase {
 
     $replacements = [];
     $transformers = [];
+    $plugin_manager = $this->getPreprocessPluginManager();
     // Foreach DCI_* pair in the array, check if a plugin exists, and process if it does.  (Pass in test definition template)
     foreach ($dci_variables as $key => $value) {
       if (preg_match('^DCI_(.+)$', $key, $matches)) {
         $name = $matches[0];
         $replacements["%$key%"] = $value;
-        if ($this->pluginManager->hasPlugin('Variable', $name)) {
-          $plugin = $this->pluginManager->getPlugin('Variable', $name);
+        if ($plugin_manager->hasPlugin('variable', $name)) {
+          $plugin = $plugin_manager->getPlugin('variable', $name);
           $transformers[] = function ($value, $key) use ($plugin) {
             return $plugin->process($value, $key);
           };
         }
-        if ($this->pluginManager->hasPlugin('Preprocess', $name)) {
-          $definition = $this->pluginManager->getPlugin('Preprocess', $name)
+        if ($plugin_manager->hasPlugin('definition', $name)) {
+          $definition[$key] = $plugin_manager->getPlugin('definition', $name)
             ->process($definition, $value);
         }
       }
@@ -123,6 +129,15 @@ class CompileDefinition extends PluginBase {
     }
     return [];
   }
+
+  protected function getPreprocessPluginManager() {
+    if (!isset($this->pluginManager)) {
+      $this->pluginManager = new PluginManager('Preprocess');
+    }
+    return $this->pluginManager;
+  }
+
+}
 
     /* *************** Legacy code below *********************** */
   /*
@@ -298,5 +313,3 @@ DrupalCI Run:
 
 
    */
-
-}
