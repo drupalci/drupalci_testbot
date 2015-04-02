@@ -35,22 +35,27 @@ class PullCommand extends DrupalCICommandBase {
   public function execute(InputInterface $input, OutputInterface $output) {
     Output::setOutput($output);
     $output->writeln("<info>Executing pull ...</info>");
-    $names = $input->getArgument('container_name');
+    $images = $input->getArgument('container_name');
     // TODO: Validate passed arguments
-    foreach ($names as $name) {
-        Output::writeln("<comment>Pulling <options=bold>$name</options=bold> container</comment>");
-        $this->pull($name, $input);
+    foreach ($images as $image) {
+        $name = explode (':',$image);
+        $container = $name[0];
+        $tag = $name[1];
+        if(empty($tag)) {
+           $tag = 'latest';
+        }
+        Output::writeln("<comment>Pulling <options=bold>$container</options=bold> container</comment>");
+        $this->pull($container ,$tag , $input);
     }
   }
 
   /**
    * (#inheritdoc)
    */
-  protected function pull($name, InputInterface $input) {
+  protected function pull($name, $tag, InputInterface $input) {
     Output::writeln("-------------------- Start pulling --------------------");
     $manager = $this->getManager();
-    // $manager->pull('ubuntu');
-    $response = $manager->pull($name, $tag = 'latest', function ($output) {
+    $response = $manager->pull($name, $tag, function ($output) {
       if (isset($output['stream'])) {
         Output::writeLn('<info>' . $output['stream'] . '</info>');
       }
