@@ -12,7 +12,7 @@ then
 fi
 
 
-TAG="drupalci/db-pgsql-9.1"
+TAG="drupalci/pgsql-9.1"
 NAME="drupaltestbot-db-pgsql-9.1"
 STALLED=$(docker ps -a | grep ${TAG} | grep Exit | awk '{print $1}')
 RUNNING=$(docker ps | grep ${TAG} | grep 5432)
@@ -40,4 +40,4 @@ CONTAINER_ID=$(docker ps | grep ${TAG} | awk '{print $1}')
 
 echo "CONTAINER STARTED: $CONTAINER_ID"
 
-docker ps | grep "drupalci/db-pgsql-9.1"
+docker ps | grep "drupalci/pgsql-9.1"

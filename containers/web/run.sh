@@ -100,7 +100,7 @@ fi
 
 DCI_IDENTIFIER=${DCI_IDENTIFIER:-"build_$(date +%Y_%m_%d_%H%M%S)"}
 DCI_DRUPALBRANCH=${DCI_DRUPALBRANCH:-"8.0.x"}
-DCI_DRUPALVERSION=${DCI_DRUPALVERSION:-"$(echo $DCI_DRUPALBRANCH | awk -F. '{print $1}')"}
+DCI_DRUPALVERSION=${DCI_DRUPALVERSION:-"$(echo $DCI_DRUPALBRANCH | awk -F. '{print $1}')"} #'
 DCI_UPDATEREPO=${DCI_UPDATEREPO:-"false"}
 DCI_REPODIR=${DCI_REPODIR:-"$HOME/testbotdata"}
 DCI_DRUPALREPO=${DCI_DRUPALREPO:-"http://git.drupal.org/project/drupal.git"}

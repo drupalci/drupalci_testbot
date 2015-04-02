@@ -11,7 +11,7 @@ then
   fi
 fi
 
-TAG="drupalci/db-mysql-5.5"
+TAG="drupalci/mysql-5.5"
 NAME="drupaltestbot-db-mysql-5.5"
 STALLED=$(docker ps -a | grep ${TAG} | grep Exit | awk '{print $1}')
 RUNNING=$(docker ps | grep ${TAG} | grep 3306 | awk '{print $1}')

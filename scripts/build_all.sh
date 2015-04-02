@@ -234,7 +234,7 @@ done
 for DB_BUILD in "${dbtypes[@]}";
   do
   echo
-  echo "Build and restart db-${DB_BUILD} container"
+  echo "Build and restart ${DB_BUILD} container"
   echo "----------------------------------------------------------------------"
   echo
   cd "${BASEDIR}"

@@ -174,7 +174,7 @@ fi
 for DB_BUILD in "${dbtypes[@]}";
   do
   echo
-  echo "Restart db-${DB_BUILD} container"
+  echo "Restart ${DB_BUILD} container"
   echo "----------------------------------------------------------------------"
   echo
   cd "./containers/database/${DB_BUILD}"
