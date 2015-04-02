@@ -90,35 +90,35 @@ class CompileDefinition extends PluginBase {
     $dci_variables = $cli_variables + $environment_variables + $local_overrides + $jobtype_defaults + $platform_defaults;
 
     $replacements = [];
-    $transformers = [];
     $plugin_manager = $this->getPreprocessPluginManager();
+    foreach ($dci_variables as $key => $value) {
+      if (preg_match('/^DCI_(.+)$/', $key, $matches)) {
+        $name = strtolower($matches[1]);
+        if ($plugin_manager->hasPlugin('variable', $name)) {
+          $plugin = $plugin_manager->getPlugin('variable', $name);
+          // @TODO: perhaps this should be on the annotation.
+          $new_key = $plugin->key();
+          // @TODO: error handling.
+          $dci_variables[$new_key] = $plugin->process($dci_variables[$new_key], $value);
+        }
+      }
+    }
     // Foreach DCI_* pair in the array, check if a plugin exists, and process if it does.  (Pass in test definition template)
     foreach ($dci_variables as $key => $value) {
       if (preg_match('/^DCI_(.+)$/', $key, $matches)) {
         $name = strtolower($matches[1]);
         $replacements["%$key%"] = $value;
-        if ($plugin_manager->hasPlugin('variable', $name)) {
-          $plugin = $plugin_manager->getPlugin('variable', $name);
-          $transformers[] = function ($value, $key) use ($plugin) {
-            return $plugin->process($value, $key);
-          };
-        }
         if ($plugin_manager->hasPlugin('definition', $name)) {
           $plugin_manager->getPlugin('definition', $name)
             ->process($definition, $value);
         }
       }
     }
-    $transformers[] = function ($value) use ($replacements) {
-      return strtr($value, $replacements);
-    };
 
     // Process DCI_* variable substitution into test definition template
 
-    array_walk_recursive($definition, function (&$value, $key) use ($transformers) {
-      foreach ($transformers as $transformer) {
-        $value = $transformer($value, $key);
-      }
+    array_walk_recursive($definition, function (&$value) use ($replacements) {
+      $value = strtr($value, $replacements);
     });
     $job->setDefinition($definition);
     return;
