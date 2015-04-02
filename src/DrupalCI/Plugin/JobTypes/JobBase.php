@@ -358,4 +358,10 @@ class JobBase extends ContainerBase implements JobInterface {
   public function getErrorState() {
     return $this->errorStatus;
   }
+
+  public function getTemplate() {
+    // Based on $job->jobtype, returns the parsed drupalci.yml file from DrupalCI/Plugin/JobTypes/<jobtype>
+    // This could potentially be an annotation, but I'm wondering about code readability
+
+  }
 }

@@ -40,31 +40,46 @@ class RunCommand extends DrupalCICommandBase {
     $this
       ->setName('run')
       ->setDescription('Execute a given job run.')
-      ->addArgument('job', InputArgument::REQUIRED, 'Job definition.');
+      ->addArgument('definition', InputArgument::OPTIONAL, 'Job definition.');
   }
 
   /**
    * {@inheritdoc}
    */
   public function execute(InputInterface $input, OutputInterface $output) {
-    // Determine what job type is being run.
-    $job_type = $input->getArgument('job');
+    $definition = $input->getArgument('definition');
+
+    if (!$definition) {
+      $definition = "drupalci.yml";
+    }
+    $job_type = (substr(trim($definition), -4) == ".yml") ? 'generic' : $definition;
 
     /** @var $job \DrupalCI\Plugin\JobTypes\JobInterface */
     $job = $this->jobPluginManager()->getPlugin($job_type, $job_type);
+
     // Link our $output variable to the job, so that jobs can display their work.
     Output::setOutput($output);
+
+    // Load the default job definition template for this job type
+    // TODO: How?  Do we do this here, or in CompileDefinition.php?
+    
+
+
+
     // TODO: Create hook to allow for jobtype-specific pre-configuration.
     // We'll need this if we want to (as an example) convert travisci
     // definitions to drupalci definitions.
     // Load the job definition, environment defaults, and any job-specific configuration steps which need to occur
+
     foreach (['compile_definition', 'validate_definition', 'setup_directories'] as $step) {
       $this->buildstepsPluginManager()->getPlugin('configure', $step)->run($job, NULL);
     }
+
     if ($job->getErrorState()) {
       $output->writeln("<error>Job halted due to an error while configuring job.</error>");
       return;
     }
+
     // The job should now have a fully merged job definition file, including
     // any local or drupalci defaults not otherwise defined in the passed job
     // definition, located in $job->job_definition

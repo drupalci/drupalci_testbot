@@ -141,7 +141,15 @@ class SimpletestJob extends JobBase {
 
   // **************** Start job definition related properties ****************
 
-  public $defaultArguments = array();
+  public $defaultArguments = array(
+    'DCI_DBVersion' => 'mysql-5.5',
+    'DCI_PHPVersion' => '5.4',
+    'DCI_CoreRepository' => 'git://drupalcode.org/project/drupal.git',
+    'DCI_CoreBranch' => '8.0.x',
+    'DCI_GitCheckoutDepth' => 1,
+    //  checkout_dir: sites/all/modules/token/'
+
+  );
   // This is currently not used.  It is expected this will be superceded by a
   // default $jobDefinition property.
 
@@ -206,8 +214,7 @@ class SimpletestJob extends JobBase {
         )
       )
     );
-    //array_walk_recursive($yaml, function ($value) use ($env) { return strtr($value, $env)};);
-    // %DCI_VARIABLE%
+
 
   }
 

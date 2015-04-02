@@ -1,0 +1,25 @@
+# Job Definition Template for the DrupalCI 'Simpletest' Job Type
+environment:
+  db:
+    - %DCI_DBVersion%
+  web:
+    - web-%DCI_PHPVersion%
+setup:
+  checkout:
+    # DCI_CodeBase plugin can override the checkout array to look like:
+    # - protocol: local
+    #   source_dir: %DCI_SourceDirectory%
+    - protocol: git
+      repo: %DCI_CoreRepository%
+      branch: %DCI_CoreBranch%
+      depth: %DCI_GitCheckoutDepth%
+      checkout_dir: %DCI_WorkingDir%
+# If %DCI_InstallCommand%, we need to perform an install.
+# TODO: We always need InstallCommand if CoreRepo is drupal and branch < 8.0.x
+# install:
+#   command:
+#     - %DCI_InstallCommand%
+execute:
+  command:
+    # May need a DCI_RunScript Plugin to expand the runscript with other variables to be substituted.
+    - cd /data && php %DCI_RunScript%

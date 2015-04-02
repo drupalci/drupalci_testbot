@@ -29,16 +29,26 @@ class CompileDefinition extends PluginBase {
    * {@inheritdoc}
    */
   public function run(JobInterface $job, $data = NULL) {
-    // Get and parse test definitions
+    // Get and parse test definition template (containing %DCI_*% placeholders)
+        // For 'generic' jobs, this is the file passed in on the 'drupalci run <filename>' command.
+        // For other 'jobtype' jobs, this is the drupalci.yml template file located in DrupalCI/Plugin/JobTypes/<jobtype>
+
+    // Get and parse test argument parameters
     // DrupalCI jobs are controlled via a hierarchy of configuration settings, which define the behaviour of the platform while running DrupalCI jobs.  This hierarchy is defined as follows, which each level overriding the previous:
-
     // 1. Out-of-the-box DrupalCI platform defaults, as defined in DrupalCI/Plugin/JobTypes/JobBase->platformDefaults
-    // 2. Out-of-the-box DrupalCI JobType defaults, as defined in DrupalCI/Plugin/JobTypes/<jobtype>/<JobType>Job->defaultDefinition
-
+    // 2. Out-of-the-box DrupalCI JobType defaults, as defined in DrupalCI/Plugin/JobTypes/<jobtype>->defaultArguments
     // 3. Local overrides defined in ~/.drupalci/config
     // 4. 'DCI_' namespaced environment variable overrides
-    // 5. Test-specific overrides passed inside a DrupalCI test definition (e.g. .drupalci.yml)
-    // 6. Custom overrides located inside a test definition defined via the $source variable when calling this function.
+      // Use above to generate array of DCI_* key=>value pairs
+
+    // Foreach DCI_* pair in the array, check if a plugin exists, and process if it does.  (Pass in test definition template)
+
+    // Process DCI_* variable substitution into test definition template
+      // - array_walk_recursive($yaml, function ($value) use ($env) { return strtr($value, $env)};);
+
+
+
+    /* *************** Legacy code below *********************** */
 
     $confighelper = new ConfigHelper();
 
@@ -107,7 +117,7 @@ class CompileDefinition extends PluginBase {
       $job->setDefinition($job_definition);
     }
 
-    $config = $cli_args + $definition_args + $environment_args + $local_args + $default_args + $platform_args;
+    $config = $cli_args + $definition_args + $environment_args + $local_args + $default_args + $platform_defaults;
 
     // Set initial build variables
     $buildvars = $job->getBuildVars();
@@ -117,6 +127,11 @@ class CompileDefinition extends PluginBase {
     // $this->buildvarsToDefinition($job);
 
     return;
+  }
+
+  protected function parseDefinitionTemplate($definition_template) {
+    // TODO: YAML Parse the template file and return results.
+
   }
 
   protected function getDefinitionFile($config) {
