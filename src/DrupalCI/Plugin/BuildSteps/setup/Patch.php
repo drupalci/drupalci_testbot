@@ -44,7 +44,7 @@ class Patch extends SetupBase {
       $cmd = "patch -p1 -i $patchfile -d $directory";
 
       $this->exec($cmd, $cmdoutput, $result);
-      if ($result !==0) {
+      if ($result !== 0) {
         // The command threw an error.
         $job->errorOutput("Patch failed", "The patch attempt returned an error.");
         Output::writeLn($cmdoutput);
