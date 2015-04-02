@@ -14,19 +14,24 @@ use Guzzle\Http\ClientInterface;
 class FetchTest extends DrupalCITestCase {
 
   function testRun() {
-    $url = 'http://example.com/site/dir/file.patch';
+    $file = 'file.patch';
+    $url = 'http://example.com/site/dir/' . $file;
+    $dir = 'test/dir';
+
     $request = $this->getMock('Guzzle\Http\Message\RequestInterface');
     $request->expects($this->once())
       ->method('setResponseBody')
-      ->with('test/dir/file.patch')
+      ->with("$dir/$file")
       ->will($this->returnSelf());
+
     $http_client = $this->getMock('Guzzle\Http\ClientInterface');
     $http_client->expects($this->once())
       ->method('get')
       ->with($url)
       ->will($this->returnValue($request));
+
     $fetch = new TestFetch([], 'fetch', []);
-    $fetch->setValidate('test/dir');
+    $fetch->setValidate($dir);
     $fetch->setHttpClient($http_client);
     $fetch->run($this->job, [['url' => $url]]);
   }
