@@ -37,7 +37,6 @@ class WebEnvironment extends PhpEnvironment {
   }
 
   protected function buildImageNames($data, JobInterface $job) {
-    echo "Data: " . print_r($data, TRUE);
     $images = [];
     foreach ($data as $key => $web_version) {
       $images["$web_version"]['image'] = "drupalci/$web_version";
