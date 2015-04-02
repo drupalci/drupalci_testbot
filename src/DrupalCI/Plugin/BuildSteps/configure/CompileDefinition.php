@@ -94,7 +94,7 @@ class CompileDefinition extends PluginBase {
     $plugin_manager = $this->getPreprocessPluginManager();
     // Foreach DCI_* pair in the array, check if a plugin exists, and process if it does.  (Pass in test definition template)
     foreach ($dci_variables as $key => $value) {
-      if (preg_match('^DCI_(.+)$', $key, $matches)) {
+      if (preg_match('/^DCI_(.+)$/', $key, $matches)) {
         $name = $matches[0];
         $replacements["%$key%"] = $value;
         if ($plugin_manager->hasPlugin('variable', $name)) {
