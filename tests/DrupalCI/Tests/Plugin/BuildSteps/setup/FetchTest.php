@@ -23,6 +23,8 @@ class FetchTest extends DrupalCITestCase {
       ->method('setResponseBody')
       ->with("$dir/$file")
       ->will($this->returnSelf());
+    $request->expects($this->once())
+      ->method('send');
 
     $http_client = $this->getMock('Guzzle\Http\ClientInterface');
     $http_client->expects($this->once())
@@ -38,7 +40,7 @@ class FetchTest extends DrupalCITestCase {
 }
 
 class TestFetch extends Fetch {
-  use TestSetupValidateDirTrait;
+  use TestSetupBaseTrait;
 
   function setHttpClient(ClientInterface $http_client) {
     $this->httpClient = $http_client;
