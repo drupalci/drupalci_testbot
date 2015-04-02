@@ -100,7 +100,7 @@ class InitDatabaseContainersCommand extends DrupalCICommandBase {
     $helper = $this->getHelperSet()->get('question');
     $defaultcontainer = array_flip($containers);
     $containers[] = 'all';    $question = new ChoiceQuestion(
-      '<fg=cyan;bg=blue>Please select the numbers corresponding to which DrupalCI database environments to support.  Separate multiple entries with commas. (Default: ['. $defaultcontainer[$this->default_build['database']].'])</fg=cyan;bg=blue>',
+      '<fg=cyan;bg=blue>Please select the numbers corresponding to which DrupalCI database environments to support.  Separate multiple entries with commas. (Default: ['. $defaultcontainer[$this->default_build['database']] .'])</fg=cyan;bg=blue>',
       $containers,
       $defaultcontainer[$this->default_build['database']]
     );
