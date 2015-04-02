@@ -26,6 +26,7 @@ class InitAllCommand extends DrupalCICommandBase {
       ->setDescription('Setup the DrupalCI Environment with sane defaults for testing')
       ->addOption('dbtype', '', InputOption::VALUE_OPTIONAL, 'Database types to support')
       ->addOption('phptype', '', InputOption::VALUE_OPTIONAL, 'PHP Versions to support')
+      ->addOption('forcebuild', null, InputOption::VALUE_NONE, 'Force Building Environments locally rather than pulling the fslayers')
     ;
   }
 
@@ -40,6 +41,7 @@ class InitAllCommand extends DrupalCICommandBase {
     $options['--ansi'] = $input->getOption('ansi');
     $options['--no-ansi'] = $input->getOption('no-ansi');
     $options['--no-interaction'] = $input->getOption('no-interaction');
+    $options_force['--forcebuild'] = $input->getOption('forcebuild');
 
     # Validate/Install dependencies
     $cmd = $this->getApplication()->find('init:dependencies');
@@ -63,7 +65,7 @@ class InitAllCommand extends DrupalCICommandBase {
       'command' => 'init:base',
       'container_name' => array('drupalci/base', 'drupalci/db-base', 'drupalci/php-base'),
     );
-    $cmdinput = new ArrayInput($arguments + $options);
+    $cmdinput = new ArrayInput($arguments + $options + $options_force);
     $returnCode = $cmd->run($cmdinput, $output);
 
     # Generate Database Containers
@@ -78,7 +80,7 @@ class InitAllCommand extends DrupalCICommandBase {
       $arguments['container_name'] = array($dbtype);
     }
 
-    $cmdinput = new ArrayInput($arguments + $options);
+    $cmdinput = new ArrayInput($arguments + $options + $options_force);
     $returnCode = $cmd->run($cmdinput, $output);
     # TODO: Error Handling
 
@@ -94,7 +96,7 @@ class InitAllCommand extends DrupalCICommandBase {
       $arguments['container_name'] = array($phptype);
     }
 
-    $cmdinput = new ArrayInput($arguments + $options);
+    $cmdinput = new ArrayInput($arguments + $options + $options_force);
     $returnCode = $cmd->run($cmdinput, $output);
     # TODO: Error Handling
 
