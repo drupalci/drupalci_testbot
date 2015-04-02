@@ -37,10 +37,11 @@ class WebEnvironment extends PhpEnvironment {
   }
 
   protected function buildImageNames($data, JobInterface $job) {
+    echo "Data: " . print_r($data, TRUE);
     $images = [];
-    foreach ($data as $key => $php_version) {
-      $images["web-$php_version"]['image'] = "drupalci/web-$php_version";
-      Output::writeLn("<info>Adding image: <options=bold>drupalci/web-$php_version</options=bold></info>");
+    foreach ($data as $key => $web_version) {
+      $images["$web_version"]['image'] = "drupalci/$web_version";
+      Output::writeLn("<info>Adding image: <options=bold>drupalci/$web_version</options=bold></info>");
     }
     return $images;
   }

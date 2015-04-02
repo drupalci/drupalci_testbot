@@ -187,7 +187,7 @@ class SimpletestJob extends JobBase {
         // Requires web container (versus php-only container)
         // Defaults to PHP 5.4
         'web' => array(
-          'web-5.4'
+          '5.4'
         ),
         // Defines any Job-specific variables which are required to build out the
         // rest of the job definition build steps, and/or configure aspects of
