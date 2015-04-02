@@ -50,7 +50,7 @@ class PluginManager {
     if (!isset($this->pluginDefinitions)) {
       $this->pluginDefinitions = $this->discoverPlugins();
     }
-    if (isset($this->pluginDefinitions[$type][$plugin_id])) {
+    if (isset($this->pluginDefinitions[$type][$plugin_id]) || isset($this->pluginDefinitions['generic'][$plugin_id])) {
       return TRUE;
     }
     return FALSE;
