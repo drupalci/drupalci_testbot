@@ -3,7 +3,7 @@ environment:
   db:
     - %DCI_DBVersion%
   web:
-    - web-%DCI_PHPVersion%
+    - %DCI_PHPVersion%
 setup:
   checkout:
     # DCI_CodeBase plugin can override the checkout array to look like:
