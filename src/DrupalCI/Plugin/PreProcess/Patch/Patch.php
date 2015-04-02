@@ -1,19 +1,19 @@
 <?php
 /**
  * @file
- * Contains \DrupalCI\Plugin\Preprocess\DCI_Patch\PreprocessDCI_Patch
+ * Contains \DrupalCI\Plugin\Preprocess\Patch
  *
  * PreProcesses DCI_Patch variables, updating the job definition with a setup:patch: section.
  */
 
-namespace DrupalCI\Plugin\PreProcess\DCI_Patch;
+namespace DrupalCI\Plugin\Preprocess;
 
 use DrupalCI\Plugin\JobTypes\JobInterface;
 
 /**
- * @PluginID("DCI_Patch")
+ * @PluginID("Patch")
  */
-class PreprocessDCI_Patch {
+class Patch {
 
   /**
    * {@inheritdoc}
