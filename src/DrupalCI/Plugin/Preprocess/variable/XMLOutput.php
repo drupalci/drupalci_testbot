@@ -15,7 +15,7 @@ use DrupalCI\Plugin\PluginBase;
  */
 class XMLOutput extends PluginBase {
 
-  public function key() {
+  public function target() {
     return 'DCI_RunScript';
   }
 
