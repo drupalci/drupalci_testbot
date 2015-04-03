@@ -14,15 +14,21 @@ use DrupalCI\Plugin\PluginBase;
  */
 class DieOnFail extends PluginBase {
 
-  public function key() {
+  /**
+   * {@inheritdoc}
+   */
+  public function target() {
     return 'DCI_RunScript';
   }
 
-  public function process($dci_variable, $value) {
-    if (strtolower($value) === 'true') {
-      $dci_variable .=  ' --die-on-fail';
+  /**
+   * {@inheritdoc}
+   */
+  public function process($run_script, $source_value) {
+    if (strtolower($source_value) === 'true') {
+      $run_script .=  ' --die-on-fail';
     }
-    return $dci_variable;
+    return $run_script;
   }
 
 }

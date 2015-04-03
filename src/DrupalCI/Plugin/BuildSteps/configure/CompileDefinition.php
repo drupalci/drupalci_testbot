@@ -95,15 +95,19 @@ class CompileDefinition extends PluginBase {
       if (preg_match('/^DCI_(.+)$/', $key, $matches)) {
         $name = strtolower($matches[1]);
         if ($plugin_manager->hasPlugin('variable', $name)) {
+          /** @var \DrupalCI\Plugin\Preprocess\VariableInterface $plugin */
           $plugin = $plugin_manager->getPlugin('variable', $name);
           // @TODO: perhaps this should be on the annotation.
-          $new_keys = $plugin->key();
+          $new_keys = $plugin->target();
           if (!is_array($new_keys)) {
             $new_keys = [$new_keys];
           }
           // @TODO: error handling.
           foreach ($new_keys as $new_key) {
-            $dci_variables[$new_key] = $plugin->process($dci_variables[$new_key], $value, $new_key);
+            // Only process variable plugins if the variable being changed actually exists.
+            if (!empty($dci_variables[$new_key])) {
+              $dci_variables[$new_key] = $plugin->process($dci_variables[$new_key], $value, $new_key);
+            }
           }
         }
       }

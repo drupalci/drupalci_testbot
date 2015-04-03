@@ -13,8 +13,11 @@ namespace DrupalCI\Plugin\Preprocess\variable;
  */
 class DBPassword extends DBUrlBase {
 
-  public function process($dci_variable, $value) {
-    return $this->buildUrl($dci_variable, 'pass', $value);
+  /**
+   * {@inheritdoc}
+   */
+  public function process($db_url, $source_value) {
+    return $this->changeUrlPart($db_url, 'pass', $source_value);
   }
 
 }

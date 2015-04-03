@@ -12,12 +12,15 @@ namespace DrupalCI\Plugin\Preprocess\variable;
  */
 class DBVersion extends DBUrlBase {
 
-  public function process($dci_variable, $value) {
-    $dbtype = explode('-', $value, 2)[0];
-    $host = 'drupaltestbot-db-' . str_replace('.', '-', $value);
-    $dci_variable = $this->buildUrl($dci_variable, 'scheme', $dbtype);
-    $dci_variable = $this->buildUrl($dci_variable, 'host', $host);
-    return $dci_variable;
+  /**
+   * {@inheritdoc}
+   */
+  public function process($db_url, $source_value) {
+    $dbtype = explode('-', $source_value, 2)[0];
+    $host = 'drupaltestbot-db-' . str_replace('.', '-', $source_value);
+    $db_url = $this->changeUrlPart($db_url, 'scheme', $dbtype);
+    $db_url = $this->changeUrlPart($db_url, 'host', $host);
+    return $db_url;
   }
 
 }
