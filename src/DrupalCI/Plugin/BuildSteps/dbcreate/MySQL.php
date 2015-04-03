@@ -23,7 +23,8 @@ class MySQL extends ContainerCommand {
     $host = $parts['host'];
     $user = $parts['user'];
     $pass = $parts['pass'];
-    $db_name = $data ?: $parts['path'];
-    parent::run($job, "mysql -h $host -u $user -p$pass -e 'CREATE DATABASE $db_name");
+    $db_name = $data ?: ltrim($parts['path'], '/');
+    $cmd = "mysql -h $host -u $user -p$pass -e 'CREATE DATABASE $db_name'";
+    parent::run($job, $cmd);
   }
 }

@@ -17,7 +17,7 @@ class DBVersion {
     $dbtype = explode('-', $value, 2)[0];
     $definition =
       array_slice($definition, 0, $length, TRUE) +
-      ['dbcreate' => [$dbtype => TRUE]] +
+      ['dbcreate' => [$dbtype => FALSE]] +
       array_slice($definition, $length, NULL, TRUE);
   }
 }
