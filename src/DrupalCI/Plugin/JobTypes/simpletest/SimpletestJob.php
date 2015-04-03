@@ -153,7 +153,7 @@ class SimpletestJob extends JobBase {
     'DCI_TESTGROUPS' => '--all',
     'DCI_SQLite' => TRUE,
     'DCI_Concurrency' => 4,
-    'DCI_XMLOutput' => '/data'
+    'DCI_XMLOutput' => '/data/results'
 
 
 

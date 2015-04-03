@@ -22,6 +22,8 @@ setup:
 pre-install:
   command:
     - apt-get install -y mysql-client
+  createdirectory:
+    - /data/results
 install:
   command:
     # May need a DCI_RunScript Plugin to expand the runscript with other variables to be substituted.
