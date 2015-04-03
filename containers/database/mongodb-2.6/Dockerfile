@@ -1,5 +1,4 @@
 FROM drupalci/db-base
-MAINTAINER drupalci
 
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 

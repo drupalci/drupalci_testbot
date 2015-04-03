@@ -1,5 +1,4 @@
 FROM drupalci/db-base
-MAINTAINER drupalci
 
 # Packages.
 RUN apt-get -qq update
@@ -36,6 +35,6 @@ EXPOSE 5432
 
 USER postgres
 
-COPY ./conf/startup.sh /opt/startup.sh
+ADD ./conf/startup.sh /opt/startup.sh
 
 CMD ["/bin/bash", "/opt/startup.sh"]

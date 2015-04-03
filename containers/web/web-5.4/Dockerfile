@@ -1,16 +1,12 @@
-FROM       drupalci/web-base
+FROM       drupalci/mod-php
 MAINTAINER drupalci
 
 ##
-# PHP 5.4.31
+# PHP.
 ##
 
-RUN sudo php-build -i development --pear 5.4.39 $HOME/.phpenv/versions/5.4.39
+RUN sudo php-build -i development --pear 5.4.31 $HOME/.phpenv/versions/5.4.31
 RUN sudo chown -R root:root $HOME/.phpenv
 RUN phpenv rehash
-RUN phpenv global 5.4.39
-RUN echo | pecl install mongo
+RUN phpenv global 5.4.31
 
-COPY daemon.sh /
-ENTRYPOINT ["/bin/bash", "-c"]
-CMD ["/daemon.sh"]
