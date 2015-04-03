@@ -6,13 +6,8 @@ alias php='/root/.phpenv/shims/php'
 
 export PATH=$HOME/bin:/root/.phpenv/shims:$PATH
 
-# Only need the newest drush version for Drupal 8 and above
-if (( $DCI_DRUPALVERSION >= 8 ));
-  then
-      export DRUSH="/.composer/vendor/drush/drush/drush"
-    else
-      export DRUSH="$(which drush)"
-fi
+# We need the newest drush version
+export DRUSH="/.composer/vendor/drush/drush/drush"
 
 # Start apache
 echo "Operation [start]..."
