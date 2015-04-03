@@ -102,8 +102,13 @@ class CompileDefinition extends PluginBase {
             $new_keys = [$new_keys];
           }
           // @TODO: error handling.
+          echo "New Keys: " . print_r($new_keys, TRUE);
+          echo "Vars: " . print_r($dci_variables, TRUE);
           foreach ($new_keys as $new_key) {
-            $dci_variables[$new_key] = $plugin->process($dci_variables[$new_key], $value, $new_key);
+            // Only process variable plugins if the variable being changed actually exists.
+            if (!empty($dci_variables[$new_key])) {
+              $dci_variables[$new_key] = $plugin->process($dci_variables[$new_key], $value, $new_key);
+            }
           }
         }
       }
