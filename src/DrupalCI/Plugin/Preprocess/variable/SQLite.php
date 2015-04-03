@@ -15,12 +15,18 @@ use DrupalCI\Plugin\PluginBase;
  */
 class SQLite extends PluginBase {
 
-  public function key() {
+  /**
+   * {@inheritdoc}
+   */
+  public function target() {
     return 'DCI_RunScript';
   }
 
-  public function process($dci_variable, $value) {
-    return "$dci_variable --sqlite $value";
+  /**
+   * {@inheritdoc}
+   */
+  public function process($run_script, $sqlite) {
+    return "$run_script --sqlite $sqlite";
   }
 
 }

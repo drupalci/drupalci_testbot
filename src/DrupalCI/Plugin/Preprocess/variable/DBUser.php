@@ -7,14 +7,18 @@
 
 
 namespace DrupalCI\Plugin\Preprocess\variable;
+use DrupalCI\Plugin\Preprocess\VariableInterface;
 
 /**
  * @PluginID("dbuser")
  */
-class DBUser extends DBUrlBase {
+class DBUser extends DBUrlBase implements VariableInterface {
 
-  public function process($dci_variable, $value) {
-    return $this->buildUrl($dci_variable, 'user', $value);
+  /**
+   * {@inheritdoc}
+   */
+  public function process($db_url, $source_value) {
+    return $this->changeUrlPart($db_url, 'user', $source_value);
   }
 
 }

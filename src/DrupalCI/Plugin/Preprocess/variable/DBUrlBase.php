@@ -7,33 +7,50 @@
 
 
 namespace DrupalCI\Plugin\Preprocess\variable;
+
 use DrupalCI\Plugin\PluginBase;
+use DrupalCI\Plugin\Preprocess\VariableInterface;
 
-abstract class DBUrlBase extends PluginBase {
+abstract class DBUrlBase extends PluginBase implements VariableInterface {
 
-  public function key() {
+  /**
+   * {@inheritdoc}
+   */
+  public function target() {
     return 'DCI_DBURL';
   }
 
-  protected function buildUrl($dci_variable, $key, $value) {
-    $parts = parse_url($dci_variable);
-    $parts[$key] = $value;
+  /**
+   * Change one part of the URL.
+   *
+   * @param $db_url
+   *   The value of the DCI_DBURL variable.
+   * @param $part
+   *   The URL part being replaced. Can be scheme, user, pass, host or path.
+   * @param $value
+   *   The new value of the URL part.
+   * @return string
+   *   The new DCI_DBURL.
+   */
+  protected function changeUrlPart($db_url, $part, $value) {
+    $parts = parse_url($db_url);
+    $parts[$part] = $value;
     if (isset($parts['pass']) && !isset($parts['user'])) {
       $parts['user'] = 'user';
     }
-    $url = $parts['scheme'] . '://';
+    $new_url = $parts['scheme'] . '://';
     if (isset($parts['user'])) {
-      $url .= $parts['user'];
+      $new_url .= $parts['user'];
       if (isset($parts['pass'])) {
-        $url .= ':' . $parts['pass'];
+        $new_url .= ':' . $parts['pass'];
       }
-      $url .= '@';
+      $new_url .= '@';
     }
-    $url .= $parts['host'];
+    $new_url .= $parts['host'];
     if (isset($parts['path'])) {
-      $url .= $parts['path'];
+      $new_url .= $parts['path'];
     }
-    return $url;
+    return $new_url;
   }
 
 }

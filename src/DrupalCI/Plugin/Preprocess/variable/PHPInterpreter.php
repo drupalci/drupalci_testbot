@@ -15,12 +15,18 @@ use DrupalCI\Plugin\PluginBase;
  */
 class PHPInterpreter extends PluginBase {
 
-  public function key() {
+  /**
+   * {@inheritdoc}
+   */
+  public function target() {
     return 'DCI_RunScript';
   }
 
-  public function process($dci_variable, $value) {
-    return "$dci_variable --php $value";
+  /**
+   * {@inheritdoc}
+   */
+  public function process($run_script, $php_path) {
+    return "$run_script --php $php_path";
   }
 
 }
