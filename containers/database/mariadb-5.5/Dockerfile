@@ -1,4 +1,5 @@
 FROM drupalci/db-base
+MAINTAINER drupalci
 
 # Packages.
 RUN apt-get -qq -y install software-properties-common && \
@@ -15,6 +16,6 @@ RUN rm -rf /var/lib/mysql/*
 USER root
 EXPOSE 3306
 
-ADD ./conf/startup.sh /opt/startup.sh
+COPY ./conf/startup.sh /opt/startup.sh
 
 CMD ["/bin/bash", "/opt/startup.sh"]

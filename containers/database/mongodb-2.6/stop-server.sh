@@ -11,7 +11,7 @@ then
   fi
 fi
 
-TAG="drupalci/db-mongodb-2.6"
+TAG="drupalci/mongodb-2.6"
 NAME="drupaltestbot-db-mongodb-2.6"
 STALLED=$(docker ps -a | grep ${TAG} | grep Exit | awk '{print $1}')
 RUNNING=$(docker ps | grep ${TAG} | grep 5432 | awk '{print $1}')

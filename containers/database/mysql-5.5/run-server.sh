@@ -12,7 +12,7 @@ then
 fi
 
 
-TAG="drupalci/db-mysql-5.5"
+TAG="drupalci/mysql-5.5"
 NAME="drupaltestbot-db-mysql-5.5"
 STALLED=$(docker ps -a | grep ${TAG} | grep Exit | awk '{print $1}')
 RUNNING=$(docker ps | grep ${TAG} | grep 3306)
@@ -40,4 +40,4 @@ CONTAINER_ID=$(docker ps | grep ${TAG} | awk '{print $1}')
 
 echo "CONTAINER STARTED: $CONTAINER_ID"
 
-docker ps | grep "drupalci/db-mysql-5.5"
+docker ps | grep "drupalci/mysql-5.5"

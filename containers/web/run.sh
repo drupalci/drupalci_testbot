@@ -54,7 +54,7 @@ DCI_DBPASS:        Default is 'drupaltestbotpw'
 DCI_DBCONTAINER:   Default is 'drupaltestbot-db-mysql-5.5'
 DCI_PHPVERSION:    Default is '5.4'
 DCI_CONCURRENCY:   Default is '4'  #How many cpus to use per run
-DCI_RUNSCRIPT:     Default is 'php RUNNER --php /usr/bin/php --url 'http://localhost' --color --concurrency  DCI_CONCURRENCY  --verbose --xml '/var/workspace/results'  DCI_TESTGROUPS  | tee /var/www/test.stdout ' "
+DCI_RUNSCRIPT:     Default is '/root/.phpenv/shims/php RUNNER --php /root/.phpenv/shims/php --url 'http://localhost' --color --concurrency  DCI_CONCURRENCY  --verbose --xml '/var/workspace/results'  DCI_TESTGROUPS  | tee /var/www/test.stdout ' "
 echo -e "\n\nExamples:\t\e[38;5;148msudo {VARIABLES} ./run.sh\e[39m "
 echo -e "
 Run Action and Node tests, 2 LOCAL patches, using 4 CPUs, against D8:
@@ -100,7 +100,7 @@ fi
 
 DCI_IDENTIFIER=${DCI_IDENTIFIER:-"build_$(date +%Y_%m_%d_%H%M%S)"}
 DCI_DRUPALBRANCH=${DCI_DRUPALBRANCH:-"8.0.x"}
-DCI_DRUPALVERSION=${DCI_DRUPALVERSION:-"$(echo $DCI_DRUPALBRANCH | awk -F. '{print $1}')"}
+DCI_DRUPALVERSION=${DCI_DRUPALVERSION:-"$(echo $DCI_DRUPALBRANCH | awk -F. '{print $1}')"} #'
 DCI_UPDATEREPO=${DCI_UPDATEREPO:-"false"}
 DCI_REPODIR=${DCI_REPODIR:-"$HOME/testbotdata"}
 DCI_DRUPALREPO=${DCI_DRUPALREPO:-"http://git.drupal.org/project/drupal.git"}
@@ -146,11 +146,9 @@ case $DCI_DBTYPE in
          DCI_DBCONTAINER=${DCI_DBCONTAINER:-"drupaltestbot-db-pgsql-9.1"}
        else
          case $DCI_DBVER in
-           8.4)  DCI_DBCONTAINER=${DCI_DBCONTAINER:-"drupaltestbot-db-pgsql-8.4"}
-           ;;
            9.1)  DCI_DBCONTAINER=${DCI_DBCONTAINER:-"drupaltestbot-db-pgsql-9.1"}
            ;;
-           9.3)  DCI_DBCONTAINER=${DCI_DBCONTAINER:-"drupaltestbot-db-pgsql-9.3"}
+           9.4)  DCI_DBCONTAINER=${DCI_DBCONTAINER:-"drupaltestbot-db-pgsql-9.4"}
            ;;
          esac
      fi
@@ -184,7 +182,7 @@ case $DCI_VERBOSE in
     ;;
 esac
 
-DCI_RUNSCRIPT=${DCI_RUNSCRIPT:-"php ${RUNNER} --php /usr/bin/php --url 'http://localhost' --color --concurrency ${DCI_CONCURRENCY} ${VERBO} --xml '/var/workspace/results'"}
+DCI_RUNSCRIPT=${DCI_RUNSCRIPT:-"/root/.phpenv/shims/php ${RUNNER} --php /root/.phpenv/shims/php --url 'http://localhost' --color --concurrency ${DCI_CONCURRENCY} ${VERBO} --xml '/var/workspace/results'"}
 
 # Check if we have root powers
 if [ `whoami` != root ]; then

@@ -9,7 +9,7 @@ if [ `whoami` != root ]; then
     exit 1
 fi
 
-docker ps | grep "drupalci/db-mongodb-2.6" | awk '{print $1}' | grep -v CONTAINER | xargs -n1 -I {} sudo docker stop {}
-docker ps -a | grep "drupalci/db-mongodb-2.6" | awk '{print $1}' | grep -v CONTAINER | xargs -n1 -I {} sudo docker rm {}
+docker ps | grep "drupalci/mongodb-2.6" | awk '{print $1}' | grep -v CONTAINER | xargs -n1 -I {} sudo docker stop {}
+docker ps -a | grep "drupalci/mongodb-2.6" | awk '{print $1}' | grep -v CONTAINER | xargs -n1 -I {} sudo docker rm {}
 
-docker build --rm=${DCI_REMOVEINTCONTAINERS} -t drupalci/db-mongodb-2.6 .
+docker build --rm=${DCI_REMOVEINTCONTAINERS} -t drupalci/mongodb-2.6 .

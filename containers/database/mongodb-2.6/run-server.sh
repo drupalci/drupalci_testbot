@@ -12,7 +12,7 @@ then
 fi
 
 
-TAG="drupalci/db-mongodb-2.6"
+TAG="drupalci/mongodb-2.6"
 NAME="drupaltestbot-db-mongodb-2.6"
 STALLED=$(docker ps -a | grep ${TAG} | grep Exit | awk '{print $1}')
 RUNNING=$(docker ps | grep ${TAG} | grep 5432)
@@ -40,4 +40,4 @@ CONTAINER_ID=$(docker ps | grep ${TAG} | awk '{print $1}')
 
 echo "CONTAINER STARTED: $CONTAINER_ID"
 
-docker ps | grep "drupalci/db-mongodb-2.6"
+docker ps | grep "drupalci/mongodb-2.6"
