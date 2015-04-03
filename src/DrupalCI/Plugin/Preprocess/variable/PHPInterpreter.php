@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \DrupalCI\Plugin\Preprocess\variable\SQLite.
+ * Contains \DrupalCI\Plugin\Preprocess\variable\PHPInterpreter.
  */
 
 

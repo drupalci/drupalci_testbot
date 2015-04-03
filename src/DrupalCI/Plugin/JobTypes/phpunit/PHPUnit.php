@@ -152,9 +152,6 @@ class SimpletestJob extends JobBase {
     'DCI_DBURL' => 'dbtype://host', // DBVersion, DBUser and DBPassword variable plugins will change this.
     'DCI_TESTGROUPS' => '--all',
     'DCI_SQLite' => TRUE,
-    'DCI_Concurrency' => 4,
-    'DCI_XMLOutput' => '/data'
-
 
 
       // %DCI_SQLite% --sqlite /tmp/.ht.sqlite --die-on-fail --php /root/.phpenv/shims/php --dburl sqlite://tmp/.ht.sqlite ban"
