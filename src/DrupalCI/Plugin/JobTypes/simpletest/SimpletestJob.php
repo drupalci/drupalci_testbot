@@ -151,7 +151,7 @@ class SimpletestJob extends JobBase {
     'DCI_DBPassword' => 'drupaltestbotpw',
     'DCI_DBURL' => 'dbtype://host', // DBVersion, DBUser and DBPassword variable plugins will change this.
     'DCI_TESTGROUPS' => '--all',
-    'DCI_SQLite' => TRUE,
+    'DCI_SQLite' => '/tmp/.ht.sqlite',
     'DCI_Concurrency' => 4,
     'DCI_XMLOutput' => '/data/results'
 
