@@ -18,4 +18,3 @@ docker ps | grep "drupalci/mysql-5.5" | awk '{print $1}' | grep -v CONTAINER | x
 docker ps -a | grep "drupalci/mysql-5.5" | awk '{print $1}' | grep -v CONTAINER | xargs -n1 -I {} sudo docker rm {}
 
 docker build --rm=${DCI_REMOVEINTCONTAINERS} -t drupalci/mysql-5.5 .
-

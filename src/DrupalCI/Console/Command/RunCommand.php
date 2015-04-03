@@ -7,6 +7,7 @@
 
 namespace DrupalCI\Console\Command;
 
+use DrupalCI\Console\Output;
 use DrupalCI\Plugin\PluginManager;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -39,31 +40,56 @@ class RunCommand extends DrupalCICommandBase {
     $this
       ->setName('run')
       ->setDescription('Execute a given job run.')
-      ->addArgument('job', InputArgument::REQUIRED, 'Job definition.');
+      ->addArgument('definition', InputArgument::OPTIONAL, 'Job definition.');
+    // TODO: Add 'definition file name' as an option
   }
 
   /**
    * {@inheritdoc}
    */
   public function execute(InputInterface $input, OutputInterface $output) {
-    // Determine what job type is being run.
-    $job_type = $input->getArgument('job');
+    $definition = $input->getArgument('definition');
+    // The definition argument is optional, so we need to set a default definition file if it's not provided.
+    if (!$definition) {
+      $definition = "./drupalci.yml";
+    }
+    // Populate the job type and definition file variables
+    if (substr(trim($definition), -4) == ".yml") {
+      // "File" arguments
+      $job_type = 'generic';
+      $definition_file = $definition;
+    }
+    else {
+      // "Job Type" arguments
+      $job_type = $definition;
+      $definition_file = __DIR__ . "/../../Plugin/JobTypes/$job_type/drupalci.yml";
+    }
+    // TODO: Make sure $definition_file exists
 
     /** @var $job \DrupalCI\Plugin\JobTypes\JobInterface */
     $job = $this->jobPluginManager()->getPlugin($job_type, $job_type);
+
     // Link our $output variable to the job, so that jobs can display their work.
-    $job->setOutput($output);
-    // TODO: Create hook to allow for jobtype-specific pre-configuration.
-    // We'll need this if we want to (as an example) convert travisci
-    // definitions to drupalci definitions.
+    Output::setOutput($output);
+
+    // Store the definition file argument in the job so we can act on it later
+    $job->setDefinitionFile($definition_file);
+
+    // Create a unique job build_id
+    $build_id = $job_type . '_' . time();
+
+    $job->setBuildId($build_id);
+
     // Load the job definition, environment defaults, and any job-specific configuration steps which need to occur
     foreach (['compile_definition', 'validate_definition', 'setup_directories'] as $step) {
       $this->buildstepsPluginManager()->getPlugin('configure', $step)->run($job, NULL);
     }
+
     if ($job->getErrorState()) {
       $output->writeln("<error>Job halted due to an error while configuring job.</error>");
       return;
     }
+
     // The job should now have a fully merged job definition file, including
     // any local or drupalci defaults not otherwise defined in the passed job
     // definition, located in $job->job_definition

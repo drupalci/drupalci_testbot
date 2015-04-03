@@ -8,6 +8,7 @@ namespace DrupalCI\Plugin\JobTypes;
 
 use Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use DrupalCI\Console\Output;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 use DrupalCI\Console\Jobs\ContainerBase;
@@ -22,12 +23,35 @@ class JobBase extends ContainerBase implements JobInterface {
   // Defines the job type
   public $jobtype = 'base';
 
+  // Defines a unique build ID
+  public $buildId;
+
+  /**
+   * @param mixed $buildId
+   */
+  public function setBuildId($buildId)
+  {
+    $this->buildId = $buildId;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getBuildId()
+  {
+    return $this->buildId;
+  }
+
+  // Defines the job definition file
+  protected $jobDefinitionFile;
+
   // Defines argument variable names which are valid for this job type
   public $availableArguments = array();
 
   // Defines platform defaults which apply for all jobs.  (Can still be overridden by per-job defaults)
   public $platformDefaults = array(
     "DCI_CodeBase" => "./",
+    "DCI_PHPInterpreter" => "/root/.phpenv/shims/php"
     // DCI_CheckoutDir defaults to a random directory in the system temp directory.
   );
 
@@ -119,6 +143,13 @@ class JobBase extends ContainerBase implements JobInterface {
     $this->jobDefinition = $job_definition;
   }
 
+  public function getDefinitionFile() {
+    return $this->jobDefinitionFile;
+  }
+
+  public function setDefinitionFile($filename) {
+    $this->jobDefinitionFile = $filename;
+  }
   public function getDefaultArguments() {
     return $this->defaultArguments;
   }
@@ -144,12 +175,7 @@ class JobBase extends ContainerBase implements JobInterface {
   }
 
   public function errorOutput($type = 'Error', $message = 'DrupalCI has encountered an error.') {
-    if (!empty($type)) {
-      $this->output->writeln("<error>$type</error>");
-    }
-    if (!empty($message)) {
-      $this->output->writeln("<comment>$message</comment>");
-    }
+    Output::error($type, $message);
     $this->errorStatus = -1;
   }
 
@@ -158,7 +184,7 @@ class JobBase extends ContainerBase implements JobInterface {
     $process->setTimeout(3600*6);
     $process->setIdleTimeout(3600);
     $process->run(function ($type, $buffer) {
-        $this->output->writeln($buffer);
+        Output::writeln($buffer);
     });
    }
 
@@ -241,9 +267,9 @@ class JobBase extends ContainerBase implements JobInterface {
     // Add volumes
     $volumes = $this->createContainerVolumes();
     if (!empty($volumes)) {
-      foreach ($volumes as $dir => $volume) {
-        $config['Volumes']["$dir"] = $volume;
-      }
+      //foreach ($volumes as $dir => $volume) {
+        $config['HostConfig']['Binds'] = $volumes;
+      //}
     }
     $instance = new Container($config);
     $manager->create($instance);
@@ -256,7 +282,7 @@ class JobBase extends ContainerBase implements JobInterface {
     $container['name'] = $instance->getName();
     $container['created'] = TRUE;
     $short_id = substr($container['id'], 0, 8);
-    $this->output->writeln("<comment>Container <options=bold>${container['name']}</options=bold> created from image <options=bold>${container['image']}</options=bold> with ID <options=bold>$short_id</options=bold></comment>");
+    Output::writeln("<comment>Container <options=bold>${container['name']}</options=bold> created from image <options=bold>${container['image']}</options=bold> with ID <options=bold>$short_id</options=bold></comment>");
   }
 
   protected function createContainerLinks() {
@@ -277,7 +303,7 @@ class JobBase extends ContainerBase implements JobInterface {
     $volumes = array();
     // Map working directory
     $working = $this->workingDirectory;
-    $volumes[$working] = array();
+    $volumes = array("$working:/data");
     // TODO: Map results directory
     return $volumes;
   }
@@ -316,7 +342,7 @@ class JobBase extends ContainerBase implements JobInterface {
     foreach ($this->serviceContainers[$type] as $key => $image) {
       if (in_array($image['image'], array_keys($instances))) {
         // TODO: Determine service container ports, id, etc, and save it to the job.
-        $this->output->writeln("<comment>Found existing <options=bold>${image['image']}</options=bold> service container instance.</comment>");
+        Output::writeln("<comment>Found existing <options=bold>${image['image']}</options=bold> service container instance.</comment>");
         // TODO: Load up container parameters
         $container = $manager->find($instances[$image['image']]);
         $container_id = $container->getID();
@@ -326,7 +352,7 @@ class JobBase extends ContainerBase implements JobInterface {
         continue;
       }
       // Container not running, so we'll need to create it.
-      $this->output->writeln("<comment>No active <options=bold>${image['image']}</options=bold> service container instances found. Generating new service container.</comment>");
+      Output::writeln("<comment>No active <options=bold>${image['image']}</options=bold> service container instances found. Generating new service container.</comment>");
       // Instantiate container
       $container = new Container(['Image' => $image['image']]);
       // Get container configuration, which defines parameters such as exposed ports, etc.
@@ -344,7 +370,7 @@ class JobBase extends ContainerBase implements JobInterface {
       $this->serviceContainers[$type][$key]['id'] = $container_id;
       $this->serviceContainers[$type][$key]['name'] = $container_name;
       $short_id = substr($container_id, 0, 8);
-      $this->output->writeln("<comment>Created new <options=bold>${image['image']}</options=bold> container instance with ID <options=bold>$short_id</options=bold></comment>");
+      Output::writeln("<comment>Created new <options=bold>${image['image']}</options=bold> container instance with ID <options=bold>$short_id</options=bold></comment>");
     }
   }
 
@@ -361,5 +387,11 @@ class JobBase extends ContainerBase implements JobInterface {
 
   public function getErrorState() {
     return $this->errorStatus;
+  }
+
+  public function getTemplate() {
+    // Based on $job->jobtype, returns the parsed drupalci.yml file from DrupalCI/Plugin/JobTypes/<jobtype>
+    // This could potentially be an annotation, but I'm wondering about code readability
+
   }
 }

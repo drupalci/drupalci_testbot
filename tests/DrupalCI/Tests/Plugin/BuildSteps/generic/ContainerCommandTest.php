@@ -5,19 +5,19 @@
  * Contains \DrupalCI\Tests\Plugin\BuildSteps\generic\CommandTest.
  */
 
-
 namespace DrupalCI\Tests\Plugin\BuildSteps\generic;
 
 use Docker\Container;
 use DrupalCI\Plugin\BuildSteps\generic\ContainerCommand;
+use DrupalCI\Tests\DrupalCITestCase;
 
 /**
  * @covers ContainerCommand
  */
-class ContainerCommandTest extends \PHPUnit_Framework_TestCase {
+class ContainerCommandTest extends DrupalCITestCase {
 
   function testRun() {
-    $cmd = ['test_command', 'test_argument'];
+    $cmd = 'test_command test_argument';
     $instance = new Container([]);
 
     $body = $this->getMock('GuzzleHttp\Stream\StreamInterface');
@@ -35,7 +35,7 @@ class ContainerCommandTest extends \PHPUnit_Framework_TestCase {
       ->will($this->returnValue($instance));
     $container_manager->expects($this->once())
       ->method('exec')
-      ->with($instance, $cmd, TRUE, TRUE, TRUE, TRUE)
+      ->with($instance, ['/bin/bash', '-c', $cmd], TRUE, TRUE, TRUE, TRUE)
       ->will($this->returnValue(1));
     $container_manager->expects($this->once())
       ->method('execstart')
@@ -48,20 +48,15 @@ class ContainerCommandTest extends \PHPUnit_Framework_TestCase {
       ->method('getContainerManager')
       ->will($this->returnValue($container_manager));
 
-    $output = $this->getMock('Symfony\Component\Console\Output\OutputInterface');
-
-    $job = $this->getMock('DrupalCI\Plugin\JobTypes\JobInterface');
-    $job->expects($this->once())
+    $this->job->expects($this->once())
       ->method('getDocker')
       ->will($this->returnValue($docker));
-    $job->expects($this->once())
+    $this->job->expects($this->once())
       ->method('getExecContainers')
       ->will($this->returnValue(['php' => [['id' => 'dockerci/php-5.4']]]));
-    $job->expects($this->any())
-      ->method('getOutput')
-      ->will($this->returnValue($output));
 
-    $command = new ContainerCommand([], 'command', []);
-    $command->run($job, [implode(' ', $cmd)]);
+    $command = new ContainerCommand();
+    $command->run($this->job, $cmd);
   }
+
 }

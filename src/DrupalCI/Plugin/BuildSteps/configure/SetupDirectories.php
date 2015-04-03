@@ -7,6 +7,7 @@
  */
 
 namespace DrupalCI\Plugin\BuildSteps\configure;
+use DrupalCI\Console\Output;
 use DrupalCI\Plugin\JobTypes\JobInterface;
 
 /**
@@ -36,7 +37,7 @@ class SetupDirectories {
       $job->setBuildVars($arguments);
     }
     else {
-      $job->getOutput()->writeln("<comment>Using codebase directory defined in DCI_CodeBase: <options=bold>${arguments['DCI_CodeBase']}</options=bold></comment>");
+      Output::writeLn("<comment>Using codebase directory defined in DCI_CodeBase: <options=bold>${arguments['DCI_CodeBase']}</options=bold></comment>");
     }
   }
 
@@ -51,7 +52,7 @@ class SetupDirectories {
         $job->errorOutput("Error", "Failure encountered while attempting to create a local checkout directory");
         return FALSE;
       }
-      $job->getOutput()->writeln("<comment>Checkout directory created at <info>$tmpdir</info></comment>");
+      Output::writeLn("<comment>Checkout directory created at <info>$tmpdir</info></comment>");
       $arguments['DCI_CheckoutDir'] = $tmpdir;
       $job->setBuildVars($arguments);
     }
@@ -119,7 +120,7 @@ class SetupDirectories {
       }
       else {
         // Directory is within the system temp dir.
-        $job->getOutput()->writeln("<comment>Found existing local checkout directory <info>$path</info></comment>");
+        Output::writeLn("<comment>Found existing local checkout directory <info>$path</info></comment>");
         return;
       }
     }
@@ -127,7 +128,7 @@ class SetupDirectories {
       // Directory doesn't exist, so create it.
       $directory = $arguments['DCI_CheckoutDir'];
       mkdir($directory, 0777, true);
-      $job->getOutput()->writeln("<comment>Checkout Directory created at <info>$directory</info>");
+      Output::writeLn("<comment>Checkout Directory created at <info>$directory</info>");
       // Ensure we are under the system temp dir
       if (!$this->validate_checkout_dir($job)) {
         // Something bad happened.  Attempt to transverse out of the /tmp dir, perhaps?

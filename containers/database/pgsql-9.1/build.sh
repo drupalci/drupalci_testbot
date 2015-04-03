@@ -13,4 +13,3 @@ docker ps | grep "drupalci/pgsql-9.1" | awk '{print $1}' | grep -v CONTAINER | x
 docker ps -a | grep "drupalci/pgsql-9.1" | awk '{print $1}' | grep -v CONTAINER | xargs -n1 -I {} sudo docker rm {}
 
 docker build --rm=${DCI_REMOVEINTCONTAINERS} -t drupalci/pgsql-9.1 .
-

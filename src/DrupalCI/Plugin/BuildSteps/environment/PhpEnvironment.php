@@ -9,6 +9,7 @@
  */
 
 namespace DrupalCI\Plugin\BuildSteps\environment;
+use DrupalCI\Console\Output;
 use DrupalCI\Plugin\JobTypes\JobInterface;
 
 /**
@@ -24,7 +25,7 @@ class PhpEnvironment extends EnvironmentBase {
     // $data May be a string if one version required, or array if multiple
     // Normalize data to the array format, if necessary
     $data = is_array($data) ? $data : [$data];
-    $job->getOutput()->writeln("<comment>Parsing required container image names ...</comment>");
+    Output::writeLn("<comment>Parsing required container image names ...</comment>");
     $containers = $job->getExecContainers();
     $containers['php'] = $this->buildImageNames($data, $job);
     $valid = $this->validateImageNames($containers['php'], $job);
@@ -38,7 +39,7 @@ class PhpEnvironment extends EnvironmentBase {
     $images = [];
     foreach ($data as $key => $php_version) {
       $images["php-$php_version"]['image'] = "drupalci/php-$php_version";
-      $job->getOutput()->writeln("<info>Adding image: <options=bold>drupalci/php-$php_version</options=bold></info>");
+      Output::writeLn("<info>Adding image: <options=bold>drupalci/php-$php_version</options=bold></info>");
     }
     return $images;
   }

@@ -13,7 +13,7 @@ use DrupalCI\Plugin\PluginBase;
 
 abstract class SetupBase extends PluginBase {
 
-  protected function validate_directory(JobInterface $job, $dir) {
+  protected function validateDirectory(JobInterface $job, $dir) {
     // Validate target directory.  Must be within workingdir.
     $working_dir = $job->getWorkingDir();
     $true_dir = realpath($dir);
@@ -49,6 +49,10 @@ abstract class SetupBase extends PluginBase {
 
     // Return the updated directory value.
     return $directory;
+  }
+
+  protected function exec($command, &$output, &$return_var) {
+    exec($command, $output, $return_var);
   }
 
 }

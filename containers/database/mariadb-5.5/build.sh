@@ -18,4 +18,3 @@ docker ps | grep "drupalci/mariadb-5.5" | awk '{print $1}' | grep -v CONTAINER |
 docker ps -a | grep "drupalci/mariadb-5.5" | awk '{print $1}' | grep -v CONTAINER | xargs -n1 -I {} sudo docker rm {}
 
 docker build --rm=${DCI_REMOVEINTCONTAINERS} -t drupalci/mariadb-5.5 .
-

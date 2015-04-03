@@ -27,6 +27,7 @@ class InitWebContainersCommand extends DrupalCICommandBase {
       ->setName('init:web')
       ->setDescription('Build initial DrupalCI web containers')
       ->addArgument('container_name', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'Docker container image(s) to build.')
+      ->addOption('forcebuild', null, InputOption::VALUE_NONE, 'Force Building Environments locally rather than pulling the fslayers')
     ;
   }
 
@@ -61,8 +62,14 @@ class InitWebContainersCommand extends DrupalCICommandBase {
     }
     else {
       if ($options['--no-interaction']) {
-        // Non-interactive mode.  Default to PHP 5.4
-        $names = array('web-5.4');
+        // Non-interactive mode.
+        if($this->default_build['web'] == 'all') {
+          $names = $container_names;
+        }
+        else
+        {
+          $names = array($this->default_build['web']);
+        }
       }
       else {
         $names = $this->getWebContainerNames($container_names, $input, $output);
@@ -77,8 +84,13 @@ class InitWebContainersCommand extends DrupalCICommandBase {
       return;
     }
     else {
-
-      $cmd = $this->getApplication()->find('build');
+      if($input->getOption('forcebuild')) {
+        $cmd = $this->getApplication()->find('build');
+      }
+      else
+      {
+        $cmd = $this->getApplication()->find('pull');
+      }
       $arguments = array(
         'command' => 'build',
         'container_name' => $names
@@ -93,11 +105,12 @@ class InitWebContainersCommand extends DrupalCICommandBase {
   protected function getWebContainerNames($containers, InputInterface $input, OutputInterface $output) {
     # Prompt the user
     $helper = $this->getHelperSet()->get('question');
+    $defaultcontainer = array_flip($containers);
     $containers[] = 'all';
     $question = new ChoiceQuestion(
-      '<fg=cyan;bg=blue>Please select the numbers corresponding to which DrupalCI web environments to support. Separate multiple entries with commas. (Default: [0])</fg=cyan;bg=blue>',
+      '<fg=cyan;bg=blue>Please select the numbers corresponding to which DrupalCI web environments to support. Separate multiple entries with commas. (Default: ['. $defaultcontainer[$this->default_build['web']] .'])</fg=cyan;bg=blue>',
       $containers,
-      '0'
+      $defaultcontainer[$this->default_build['web']]
     );
     $question->setMultiselect(true);
 

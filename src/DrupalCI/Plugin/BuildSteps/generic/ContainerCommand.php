@@ -8,6 +8,7 @@
 
 namespace DrupalCI\Plugin\BuildSteps\generic;
 
+use DrupalCI\Console\Output;
 use DrupalCI\Plugin\JobTypes\JobInterface;
 use DrupalCI\Plugin\PluginBase;
 
@@ -35,23 +36,23 @@ class ContainerCommand extends PluginBase {
           $id = $container['id'];
           $instance = $manager->find($id);
           $short_id = substr($id, 0, 8);
-          $job->getOutput()->writeln("<info>Executing on container instance $short_id:</info>");
+          Output::writeLn("<info>Executing on container instance $short_id:</info>");
           foreach ($data as $cmd) {
-            $job->getOutput()->writeln("<fg=magenta>$cmd</fg=magenta>");
-            $exec = explode(" ", $cmd);
+            Output::writeLn("<fg=magenta>$cmd</fg=magenta>");
+            $exec = ["/bin/bash", "-c", $cmd];
             $exec_id = $manager->exec($instance, $exec, TRUE, TRUE, TRUE, TRUE);
-            $job->getOutput()->writeln("<info>Command created as exec id " . substr($exec_id, 0, 8) . "</info>");
-            $result = $manager->execstart($exec_id, function($output, $type) use ($job)  {
+            Output::writeLn("<info>Command created as exec id " . substr($exec_id, 0, 8) . "</info>");
+            $result = $manager->execstart($exec_id, function ($result, $type) {
               if ($type === 1) {
-                $job->getOutput()->writeln("<info>$output</info>");
+                Output::writeLn("<info>$result</info>");
               }
               else {
-                $job->errorOutput('Error', $output);
+                Output::error('Error', $result);
               }
             });
             //Response stream is never read you need to simulate a wait in order to get output
             $result->getBody()->getContents();
-            $job->getOutput()->writeln((string) $result);
+            Output::writeLn((string) $result);
           }
         }
       }

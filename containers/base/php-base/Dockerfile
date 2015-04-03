@@ -21,7 +21,6 @@ RUN apt-get install -y \
     curl \
     freetds-dev \
     git \
-    htop \
     libaspell-dev \
     libbz2-dev \
     libc-client-dev \
@@ -59,11 +58,11 @@ RUN apt-get install -y \
     libxslt-dev \
     libz-dev \
     make \
-    mc \
     mysql-client \
     ncurses-dev \
     php5-dev \
     re2c \
+    sqlite3 \
     sudo \
     unixODBC-dev \
     unzip \
@@ -113,4 +112,3 @@ COPY ./conf/scripts/foreground.sh /etc/apache2/foreground.sh
 
 # Make start.sh executable.
 RUN chmod 755 /start.sh
-
