@@ -25,7 +25,6 @@ then
 	echo "I'll just give you a shell..."
 	swapon /var/swapfile
 	cd /home/vagrant/drupalci_testbot
-	./scripts/build_all.sh update
 else
 	echo 'Defaults        env_keep +="HOME"' >> /etc/sudoers
 	echo "Installing and building the all thing..."
@@ -43,7 +42,6 @@ else
         curl -s get.docker.io | sh 2>&1 | egrep -i -v "Ctrl|docker installed"
         usermod -a -G docker vagrant
 	cd /home/vagrant/drupalci_testbot
-        ./scripts/build_all.sh cleanup $database
 	touch PROVISIONED
 fi
 
@@ -53,4 +51,3 @@ echo
 echo "To access the box and run tests, do:"
 echo "vagrant ssh"
 echo "cd drupalci_testbot"
-#echo 'Example: sudo DCI_TESTGROUPS="Bootstrap" DCI_DRUPALBRANCH="8.0.x" DCI_PATCH="/path/inthebox/to/your.patch,." ./run.sh'
