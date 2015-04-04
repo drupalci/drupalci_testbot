@@ -16,7 +16,7 @@ setup:
       checkout_dir: ./
 setup:
   createdirectory:
-    - /data/results
+    - /var/www/html/results
 install:
   command:
-    - cd /data && php %DCI_RunScript% --dburl %DCI_DBURL% %DCI_TESTGROUPS%
+    - cd /var/www/html && php %DCI_RunScript% --dburl %DCI_DBURL% %DCI_TESTGROUPS%

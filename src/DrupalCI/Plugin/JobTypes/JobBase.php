@@ -259,14 +259,17 @@ class JobBase extends ContainerBase implements JobInterface {
     $config = $configs[$container['image']];
     // TODO: Allow classes to modify the default configuration before processing
     // Add service container links
-    $links = $this->createContainerLinks();
+    $links = $this->createContainerLinks($config);
     if (!empty($links)) {
       $existing = (!empty($config['HostConfig']['Links'])) ? $config['HostConfig']['Links'] : array();
       $config['HostConfig']['Links'] = $existing + $links;
-      $config['Cmd'] = ['/bin/bash', '-c', '/daemon.sh'];
+      // Set a default CMD in case the container config does not set one.
+      if (empty($config['Cmd'])) {
+        $config['Cmd'] = ['/bin/bash', '-c', '/daemon.sh'];
+      }
     }
     // Add volumes
-    $volumes = $this->createContainerVolumes();
+    $volumes = $this->createContainerVolumes($config);
     if (!empty($volumes)) {
         $config['HostConfig']['Binds'] = $volumes;
     }
@@ -284,25 +287,32 @@ class JobBase extends ContainerBase implements JobInterface {
     Output::writeln("<comment>Container <options=bold>${container['name']}</options=bold> created from image <options=bold>${container['image']}</options=bold> with ID <options=bold>$short_id</options=bold></comment>");
   }
 
-  protected function createContainerLinks() {
+  protected function createContainerLinks($config) {
     $links = array();
     if (empty($this->serviceContainers)) {
       return $links;
     }
-    $config = $this->serviceContainers;
-    foreach ($config as $type => $containers) {
+    $targets = $this->serviceContainers;
+    foreach ($targets as $type => $containers) {
       foreach ($containers as $key => $container) {
         $links[] = "${container['name']}:${container['name']}";
       }
     }
+    if (!empty($config['Links'])) {
+      $links[] = $config['links'];
+    }
     return $links;
   }
 
-  protected function createContainerVolumes() {
+  protected function createContainerVolumes($config) {
     $volumes = array();
     // Map working directory
     $working = $this->workingDirectory;
-    $volumes = array("$working:/data");
+    if (empty($config['Mountpoint'])) {
+      $config['Mountpoint'] = '/data';
+    }
+    $volumes = array("$working:" . $config['Mountpoint']);
+
     // TODO: Map results directory
     return $volumes;
   }
@@ -380,6 +390,9 @@ class JobBase extends ContainerBase implements JobInterface {
     if (!empty($config['exposed_ports'])) {
       $ports = new PortCollection($config['exposed_ports']);
       $container->setExposedPorts($ports);
+    }
+    if (!empty($config['Cmd'])) {
+      $container->setCmd($config['Cmd']);
     }
     // TODO: Process Tmpfs configuration
   }
