@@ -263,13 +263,12 @@ class JobBase extends ContainerBase implements JobInterface {
     if (!empty($links)) {
       $existing = (!empty($config['HostConfig']['Links'])) ? $config['HostConfig']['Links'] : array();
       $config['HostConfig']['Links'] = $existing + $links;
+      $config['Cmd'] = ['/bin/bash', '-c', '/daemon.sh'];
     }
     // Add volumes
     $volumes = $this->createContainerVolumes();
     if (!empty($volumes)) {
-      //foreach ($volumes as $dir => $volume) {
         $config['HostConfig']['Binds'] = $volumes;
-      //}
     }
     $instance = new Container($config);
     $manager->create($instance);
@@ -389,9 +388,4 @@ class JobBase extends ContainerBase implements JobInterface {
     return $this->errorStatus;
   }
 
-  public function getTemplate() {
-    // Based on $job->jobtype, returns the parsed drupalci.yml file from DrupalCI/Plugin/JobTypes/<jobtype>
-    // This could potentially be an annotation, but I'm wondering about code readability
-
-  }
 }
