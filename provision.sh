@@ -43,7 +43,6 @@ else
         curl -s get.docker.io | sh 2>&1 | egrep -i -v "Ctrl|docker installed"
         usermod -a -G docker vagrant
 	cd /home/vagrant/drupalci_testbot
-        ./scripts/build_all.sh cleanup $database
 	touch PROVISIONED
 fi
 
