@@ -28,7 +28,7 @@ then
 	./scripts/build_all.sh update
 else
 	echo 'Defaults        env_keep +="HOME"' >> /etc/sudoers
-	echo "Installing and building the all thing..."
+	echo "Installing and building the all things..."
 	echo "on: $(hostname) with user: $(whoami) home: $HOME"
 	swapoff -a
 	dd if=/dev/zero of=/var/swapfile bs=1M count=2048
