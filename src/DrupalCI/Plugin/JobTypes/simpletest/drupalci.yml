@@ -14,17 +14,9 @@ setup:
       branch: %DCI_CoreBranch%
       depth: %DCI_GitCheckoutDepth%
       checkout_dir: ./
-# If %DCI_InstallCommand%, we need to perform an install.
-# TODO: We always need InstallCommand if CoreRepo is drupal and branch < 8.0.x
-# install:
-#   command:
-#     - %DCI_InstallCommand%
-pre-install:
-  command:
-    - apt-get install -y mysql-client
+setup:
   createdirectory:
     - /data/results
 install:
   command:
-    # May need a DCI_RunScript Plugin to expand the runscript with other variables to be substituted.
     - cd /data && php %DCI_RunScript% --dburl %DCI_DBURL% %DCI_TESTGROUPS%
