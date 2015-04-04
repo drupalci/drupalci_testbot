@@ -21,11 +21,23 @@ export HOME="/home/vagrant"
 
 if [ -f /home/vagrant/drupalci_testbot/PROVISIONED ];
 then
-	echo "You seem to have this box installed"
-	echo "I'll just give you a shell..."
-	swapon /var/swapfile
-	cd /home/vagrant/drupalci_testbot
-	./scripts/build_all.sh update
+	echo "--------------------------------------------------------------------"
+	echo
+	echo "######                                      #####  ###"
+	echo "#     # #####  #    # #####    ##   #      #     #  # "
+	echo "#     # #    # #    # #    #  #  #  #      #        # "
+	echo "#     # #    # #    # #    # #    # #      #        # "
+	echo "#     # #####  #    # #####  ###### #      #        # "
+	echo "#     # #   #  #    # #      #    # #      #     #  # "
+	echo "######  #    #  ####  #      #    # ######  #####  ###   TESTBOT"
+	echo ""
+	echo "--------------------------------------------------------------------"
+	echo
+	echo "Hi there, it is your local Testbot!"
+	echo
+	echo "You seem to have this box already installed - which is a good thing!"
+	echo "Documentation can be found in README.md or read on..."
+	echo ""
 else
 	echo 'Defaults        env_keep +="HOME"' >> /etc/sudoers
 	echo "Installing and building the all thing..."
@@ -43,14 +55,12 @@ else
         curl -s get.docker.io | sh 2>&1 | egrep -i -v "Ctrl|docker installed"
         usermod -a -G docker vagrant
 	cd /home/vagrant/drupalci_testbot
-        ./scripts/build_all.sh cleanup $database
 	touch PROVISIONED
 fi
 
 chown -fR vagrant:vagrant /home/vagrant
-echo "Box started, run vagrant halt to stop."
+echo "Box started up, run *vagrant halt* to stop."
 echo
-echo "To access the box and run tests, do:"
-echo "vagrant ssh"
-echo "cd drupalci_testbot"
-#echo 'Example: sudo DCI_TESTGROUPS="Bootstrap" DCI_DRUPALBRANCH="8.0.x" DCI_PATCH="/path/inthebox/to/your.patch,." ./run.sh'
+echo "To access the box and run tests, run:"
+echo "- vagrant ssh"
+echo "- cd drupalci_testbot"
