@@ -93,6 +93,7 @@ class Checkout extends SetupBase {
     if (isset($details['depth'])) {
       $cmd .= ' --depth=' . $details['depth'];
     }
+    Output::writeLn("Git Command: $cmd");
     $this->exec($cmd, $cmdoutput, $result);
     if ($result !==0) {
       // Git threw an error.
