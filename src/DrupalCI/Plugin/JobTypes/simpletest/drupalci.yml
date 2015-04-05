@@ -6,7 +6,7 @@ environment:
     - %DCI_PHPVersion%
 setup:
   checkout:
-    # DCI_CodeBase plugin can override the checkout array to look like:
+    # DCI_UseLocalCodebase plugin can override the checkout array to look like:
     # - protocol: local
     #   source_dir: %DCI_SourceDirectory%
     - protocol: git
@@ -14,7 +14,10 @@ setup:
       branch: %DCI_CoreBranch%
       depth: %DCI_GitCheckoutDepth%
       checkout_dir: .
+  # Create the directory where we will store our results
   mkdir: /var/www/html/results
+# The 'install' key is currently required for the dbcreate plugin
+# TODO: make dbcreate consistent with other commands and place in pre-install
 install:
 execute:
   command:

@@ -26,7 +26,7 @@ class WebEnvironment extends PhpEnvironment {
     // $data May be a string if one version required, or array if multiple
     // Normalize data to the array format, if necessary
     $data = is_array($data) ? $data : [$data];
-    Output::writeLn("<comment>Parsing required container image names ...</comment>");
+    Output::writeLn("<info>Parsing required Web container image names ...</info>");
     $containers = $job->getExecContainers();
     $containers['web'] = $this->buildImageNames($data, $job);
     $valid = $this->validateImageNames($containers['web'], $job);
@@ -40,7 +40,7 @@ class WebEnvironment extends PhpEnvironment {
     $images = [];
     foreach ($data as $key => $php_version) {
       $images["web-$php_version"]['image'] = "drupalci/web-$php_version";
-      Output::writeLn("<info>Adding image: <options=bold>drupalci/$php_version</options=bold></info>");
+      Output::writeLn("<comment>Adding image: <options=bold>drupalci/$php_version</options=bold></comment>");
     }
     return $images;
   }

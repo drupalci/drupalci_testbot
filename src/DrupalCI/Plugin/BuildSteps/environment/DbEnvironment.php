@@ -25,7 +25,7 @@ class DbEnvironment extends EnvironmentBase {
     // $data May be a string if one version required, or array if multiple
     // Normalize data to the array format, if necessary
     $data = is_array($data) ? $data : [$data];
-    Output::writeLn("<comment>Parsing required container image names ...</comment>");
+    Output::writeLn("<info>Parsing required database container image names ...</info>");
     $containers = $this->buildImageNames($data, $job);
     $valid = $this->validateImageNames($containers, $job);
     if (!empty($valid)) {
@@ -40,7 +40,7 @@ class DbEnvironment extends EnvironmentBase {
     $images = [];
     foreach ($data as $key => $db_version) {
       $images["$db_version"]['image'] = "drupalci/$db_version";
-      Output::writeLn("<info>Adding image: <options=bold>drupalci/$db_version</options=bold></info>");
+      Output::writeLn("<comment>Adding image: <options=bold>drupalci/$db_version</options=bold></commet>");
     }
     return $images;
   }
