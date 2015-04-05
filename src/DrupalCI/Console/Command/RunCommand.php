@@ -95,6 +95,7 @@ class RunCommand extends DrupalCICommandBase {
     // definition, located in $job->job_definition
     $definition = $job->getDefinition();
     foreach ($definition as $build_step => $step) {
+      if (empty($step)) { continue; }
       foreach ($step as $plugin => $data) {
         $this->buildstepsPluginManager()->getPlugin($build_step, $plugin)->run($job, $data);
         if ($job->getErrorState()) {
