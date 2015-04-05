@@ -145,7 +145,7 @@ class SimpletestJob extends JobBase {
     'DCI_PHPVersion' => '5.4',
     'DCI_CoreRepository' => 'git://drupalcode.org/project/drupal.git',
     'DCI_CoreBranch' => '8.0.x',
-    'DCI_GitCheckoutDepth' => 1,
+    'DCI_GitCheckoutDepth' => '1',
     'DCI_RunScript' => "/var/www/html/core/scripts/run-tests.sh ",
     'DCI_DBUser' => 'drupaltestbot',
     'DCI_DBPassword' => 'drupaltestbotpw',
@@ -153,7 +153,7 @@ class SimpletestJob extends JobBase {
     'DCI_TESTGROUPS' => '--all',
     'DCI_SQLite' => '/tmp/.ht.sqlite',
     'DCI_Concurrency' => 4,
-    'DCI_XMLOutput' => '/var/www/html/results/'
+    'DCI_XMLOutput' => '/var/www/html/results'
 
 
 

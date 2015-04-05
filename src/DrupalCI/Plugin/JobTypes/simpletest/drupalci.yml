@@ -13,10 +13,9 @@ setup:
       repo: %DCI_CoreRepository%
       branch: %DCI_CoreBranch%
       depth: %DCI_GitCheckoutDepth%
-      checkout_dir: ./
-setup:
-  createdirectory:
-    - /var/www/html/results
+      checkout_dir: .
+  mkdir: /var/www/html/results
 install:
+execute:
   command:
     - cd /var/www/html && php %DCI_RunScript% --dburl %DCI_DBURL% %DCI_TESTGROUPS%
