@@ -1,2 +1,4 @@
 Image:            drupalci/web-5.4
+Cmd: ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
+Mountpoint: "/var/www/html"
 tmpfs:            TRUE
