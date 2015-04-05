@@ -33,5 +33,8 @@ RUN sudo /root/.phpenv/plugins/php-build/install.sh
 ##
 # Apache Configuration.
 ##
-
-COPY ./conf/apache2/vhost.conf /etc/apache2/sites-enabled/vhost.conf
+RUN a2enmod rewrite
+RUN a2dissite 000-default.conf
+COPY ./conf/apache2/vhost.conf /etc/apache2/sites-available/drupal.conf
+COPY ./conf/apache2/php5.conf /etc/apache2/mods-enabled/php5.conf
+RUN a2ensite drupal
