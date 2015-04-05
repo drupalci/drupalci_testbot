@@ -11,21 +11,21 @@ use DrupalCI\Plugin\BuildSteps\generic\ContainerCommand;
 use DrupalCI\Plugin\JobTypes\JobInterface;
 
 /**
- * @PluginID("createdirectory")
+ * @PluginID("mkdir")
  */
 class CreateDirectory extends ContainerCommand {
 
   /**
    * {@inheritdoc}
    */
-  public function run(JobInterface $job, $data) {
+  public function run(JobInterface $job, $directories) {
     // Data format: 'directory' or array('directory1', 'directory2')
     // $data May be a string if one directory required, or array if multiple
     // Normalize data to the array format, if necessary
-    $data = is_array($data) ? $data : [$data];
-    foreach ($data as $directory) {
+    $directories = is_array($directories) ? $directories : [$directories];
+    foreach ($directories as $directory) {
       $cmd = "mkdir -p $directory";
+      parent::run($job, $cmd);
     }
-    parent::run($job, $cmd);
   }
 }
