@@ -31,7 +31,7 @@ class Checkout extends SetupBase {
     // Normalize data to the third format, if necessary
     $data = (count($data) == count($data, COUNT_RECURSIVE)) ? [$data] : $data;
 
-    Output::writeLn("<info>Entering setup_checkout().</info>");
+    Output::writeLn("<info>Populating container codebase data volume.</info>");
     foreach ($data as $details ) {
       // TODO: Ensure $details contains all required parameters
       $details += ['protocol' => 'git'];
@@ -51,7 +51,6 @@ class Checkout extends SetupBase {
   }
 
   protected function setupCheckoutLocal(JobInterface $job, $details) {
-    Output::writeLn("<info>Entering setupCheckoutLocal().</info>");
     $source_dir = isset($details['source_dir']) ? $details['source_dir'] : './';
     $checkout_dir = isset($details['checkout_dir']) ? $details['checkout_dir'] : $job->getWorkingDir();
     // TODO: Ensure we don't end up with double slashes
@@ -67,6 +66,7 @@ class Checkout extends SetupBase {
       return;
     }
     Output::writeln("<comment>Copying files from <options=bold>$source_dir</options=bold> to the local checkout directory <options=bold>$directory</options=bold> ... </comment>");
+    // TODO: Make sure target directory is empty
     $this->exec("cp -r $source_dir/* $directory", $cmdoutput, $result);
     if ($result !== 0) {
       $job->errorOutput("Failed", "Error encountered while attempting to copy code to the local checkout directory.");
@@ -88,7 +88,7 @@ class Checkout extends SetupBase {
       return;
     }
     Output::writeLn("<comment>Performing git checkout of $repo $git_branch branch to $directory.</comment>");
-
+    // TODO: Make sure target directory is empty
     $cmd = "git clone -b $git_branch $repo $directory";
     if (isset($details['depth'])) {
       $cmd .= ' --depth=' . $details['depth'];

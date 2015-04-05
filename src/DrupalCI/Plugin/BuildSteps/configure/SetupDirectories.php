@@ -23,11 +23,12 @@ class SetupDirectories {
    * {@inheritdoc}
    */
   public function run(JobInterface $job, $data = NULL) {
+    Output::writeLn("<info>Creating codebase data volume directory</info>");
     // Setup codebase and working directories
-    $this->setupCodebase($job);
+    // $this->setupCodebase($job);
     $this->setupWorkingDir($job);
   }
-
+/*
   public function setupCodebase(JobInterface $job) {
     $arguments = $job->getBuildVars();
     // Check if the source codebase directory has been specified
@@ -40,7 +41,7 @@ class SetupDirectories {
       Output::writeLn("<comment>Using codebase directory defined in DCI_CodeBase: <options=bold>${arguments['DCI_CodeBase']}</options=bold></comment>");
     }
   }
-
+*/
   public function setupWorkingDir(JobInterface $job) {
     $arguments = $job->getBuildVars();
     // Check if the target working directory has been specified.

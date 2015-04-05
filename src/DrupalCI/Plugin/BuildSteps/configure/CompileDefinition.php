@@ -35,6 +35,7 @@ class CompileDefinition extends PluginBase {
    * {@inheritdoc}
    */
   public function run(JobInterface $job, $data = NULL) {
+    Output::writeLn("<info>Calculating job definition</info>");
     // Get and parse the default definition template (containing %DCI_*%
     // placeholders) into the job definition.
 
