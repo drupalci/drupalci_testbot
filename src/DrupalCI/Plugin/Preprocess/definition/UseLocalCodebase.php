@@ -10,14 +10,14 @@
 namespace DrupalCI\Plugin\Preprocess\definition;
 
 /**
- * @PluginID("localcodebase")
+ * @PluginID("uselocalcodebase")
  */
 class UseLocalCodebase {
 
   /**
    * {@inheritdoc}
    *
-   * DCI_LocalCodebase_Preprocessor
+   * DCI_UseLocalCodebase_Preprocessor
    *
    * Takes a string defining a local directory to use as the codebase for
    * testing, and overrides the 'setup:checkout:' array within the given
