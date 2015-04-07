@@ -39,6 +39,7 @@ then
 	echo "Documentation can be found in README.md or read on..."
 	echo ""
 else
+	echo 'cd /home/vagrant/drupalci_testbot' >> /home/vagrant/.bashrc
 	echo 'Defaults        env_keep +="HOME"' >> /etc/sudoers
 	echo "Installing and building the all the things..."
 	echo "on: $(hostname) with user: $(whoami) home: $HOME"
